@@ -1,6 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from "react-native";
 import { useRouter } from "expo-router";
+import BackArrow from "@/components/ui/BackArrow"; 
+import ProfilePicture from "@/components/ui/ProfilePictures";
+
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -10,15 +13,11 @@ export default function SettingsPage() {
     <View style={styles.container}>
       <Text style={styles.title}>Pseudo</Text>
 
-      <View style={styles.profileCircle}>
-        <Image
-          source={{ uri: "https://via.placeholder.com/150" }} 
-          style={styles.profileImage}
-        />
-      </View>
+      <ProfilePicture />
 
-      <View>
-        <Text>Paramètres</Text>
+      <View style={styles.header}>
+        <BackArrow route={"/settings"} />
+        <Text style={styles.title}>Paramètres</Text>
       </View>
 
       <Text style={styles.section}>Informations personnelles</Text>
@@ -53,6 +52,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#CFE0EC",
     padding: 20,
     paddingBottom: 80, 
+  },
+  header: {
+    display: "flex",
+    flex: 1,
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    alignItems: "center"
   },
   section: {
     color: "black",
@@ -99,6 +105,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonText: {
+    textAlign: "center",
     fontSize: 16,
     color: "#333",
   },

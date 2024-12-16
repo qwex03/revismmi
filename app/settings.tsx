@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Image, Platform } from "react-native";
 import { useRouter } from "expo-router";
+import ProfilePicture from "@/components/ui/ProfilePictures";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -24,19 +25,14 @@ export default function SettingsPage() {
     <View style={styles.container}>
       <Text style={styles.title}>Pseudo</Text>
 
-      <View style={styles.profileCircle}>
-        <Image
-          source={{ uri: "https://via.placeholder.com/150" }} 
-          style={styles.profileImage}
-        />
-      </View>
+      <ProfilePicture/>
 
       <View>
-        <Text>Paramètres</Text>
+        <Text style={styles.title}>Paramètres</Text>
       </View>
 
       {/* Liste des boutons de paramètres */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
         <Text style={styles.buttonText}>Informations personnelles</Text>
       </TouchableOpacity>
 
@@ -69,27 +65,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#CFE0EC",
     padding: 20,
-    paddingBottom: 80, // Ajoute de l'espace en bas pour la TabBar
+    paddingBottom: 80, 
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginVertical: 20,
     color: "#333",
-  },
-  profileCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#ddd",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 50,
   },
   button: {
     width: "100%",
@@ -107,6 +89,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     color: "#333",
+    textAlign: "center",
   },
   logoutButton: {
     backgroundColor: "#62A4D5",
