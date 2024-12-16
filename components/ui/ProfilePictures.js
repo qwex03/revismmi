@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
+
 const ProfilePicture = () => {
     return (
         <View style={styles.profileCircle}>
             <Image
-            source={{ uri: "https://via.placeholder.com/150" }} 
+            source={require('@/assets/images/Profile.png')} 
             style={styles.profileImage}
             />
         </View>

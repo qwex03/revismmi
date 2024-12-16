@@ -1,13 +1,29 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from "react-native";
+import { useState } from 'react';
 import { useRouter } from "expo-router";
 import BackArrow from "@/components/ui/BackArrow"; 
 import ProfilePicture from "@/components/ui/ProfilePictures";
+import BtnSubmit from "@/components/ui/BtnSubmit";
 
 
 export default function SettingsPage() {
   const router = useRouter();
+  const [pseudo, setPseudo] = useState('');
+  const [email, setEmail] = useState('');
+  const [motDePasse, setMotDePasse] = useState('');
+
   
+  const handleSubmit = () => {
+    const formData = {
+      email,
+      motDePasse,
+      pseudo,
+    };
+
+    console.log("Données du formulaire : ", formData);
+
+  };
 
   return (
     <View style={styles.container}>
@@ -26,21 +42,25 @@ export default function SettingsPage() {
           style={styles.input}
           placeholder="Nouveau mail"
           placeholderTextColor="#aaa"
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           style={styles.input}
           placeholder="Nouveau Mot de passe"
           secureTextEntry={true}
           placeholderTextColor="#aaa"
+          value={motDePasse}
+          onChangeText={setMotDePasse}
         />
         <TextInput
           style={styles.input}
           placeholder="Changez de pseudo"
           placeholderTextColor="#aaa"
+          value={pseudo}
+          onChangeText={setPseudo}
         />
-        <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Enregistrer</Text>
-        </TouchableOpacity>
+        <BtnSubmit test={handleSubmit}/>
     </View>
   );
 }

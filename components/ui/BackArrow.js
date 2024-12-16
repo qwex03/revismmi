@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
 
-const BackArrow = ({ route }) => {
+const BackArrow = ({ route, color = "#000000" }) => { 
     const router = useRouter();
 
     const handlePress = () => {
@@ -20,7 +20,7 @@ const BackArrow = ({ route }) => {
         >
             <Image 
                 source={require('@/assets/images/BackArrow.png')} 
-                style={styles.arrow}
+                style={[styles.arrow, { tintColor: color }]} 
             />
         </TouchableOpacity>
     );
@@ -38,4 +38,3 @@ const styles = StyleSheet.create({
 });
 
 export default BackArrow;
-
