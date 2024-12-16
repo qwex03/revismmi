@@ -25,7 +25,7 @@ export default function PageWithTitle() {
         </TouchableOpacity>
       </View>
 
-      <BtnHelp />
+      <BtnHelp title={"Comment créer un cours ?"} text={"Un cours est un espace pour apprendre, réviser, et se tester. Pour créer un cours, sélectionnez la manière dont vous voulez ajouter le contenu au cours (photo, importation d’un document, saisie du contenu dans un editeur de texte). Ensuite choississez un dossier dans lequel sera enregistré votre cours. Ensuite, l’IA se chargera de transformer vos notes/cours en cours et en flashcards."} />
 
     </View>
   );

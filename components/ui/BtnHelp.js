@@ -11,7 +11,7 @@ const BtnHelp = ({title, text}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.helpButton} onPress={toggleModal}>
-        <Text style={styles.buttonText}>Aide</Text>
+        <Text style={styles.buttonText}>Aide ?</Text>
       </TouchableOpacity>
 
       <Modal
@@ -22,9 +22,9 @@ const BtnHelp = ({title, text}) => {
       >
         <View style={styles.overlay}>
           <View style={styles.modal}>
-            <Text>{title}</Text>
+            <Text style={styles.title}>{title}</Text>
             <Text style={styles.modalText}>{text}</Text>
-            <Button title="Fermer" onPress={toggleModal} />
+            <Button style={styles.helpButton} title="Fermer" onPress={toggleModal} />
           </View>
         </View>
       </Modal>
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   helpButton: {
-    padding: 10,
-    backgroundColor: 'blue',
+    padding: 20,
+    backgroundColor: '#0B93FD',
     borderRadius: 5,
   },
   buttonText: {
@@ -60,7 +60,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
+  title: {
+    fontSize: 20,
+    textAlign: "center",
+    fontFamily: "bold",
+    marginBottom: 10
+  },
   modalText: {
+    textAlign: "justify",
     marginBottom: 20,
     fontSize: 18,
   },
