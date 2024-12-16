@@ -1,12 +1,16 @@
+// TabLayout.js
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+const { width } = Dimensions.get('window');
+const isSmallDevice = width < 360;
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -18,26 +22,70 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme ?? 'light'].background,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          overflow: 'hidden',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 70,
+          borderTopWidth: 0,
+          paddingBottom: 10, 
+        },
+        tabBarLabelStyle: {
+          fontSize: isSmallDevice ? 10 : 12,
+          textAlign: 'center',
+          marginTop: 2,  
+          paddingBottom: 4,  
+        },
+        tabBarIconStyle: {
+          marginBottom: isSmallDevice ? 0 : -5,
+        },
+        tabBarItemStyle: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          paddingVertical: 5,  
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Accueil',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="revise"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Réviser',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="book" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="create"
+        options={{
+          title: 'Créer',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus.circle.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="classes"
+        options={{
+          title: 'Classes',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.3.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profil',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
     </Tabs>
