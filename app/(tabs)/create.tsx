@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
-
+import BtnHelp from "@/components/ui/BtnHelp";
 
 export default function PageWithTitle() {
   const router = useRouter();
@@ -24,6 +24,9 @@ export default function PageWithTitle() {
           <Text style={styles.buttonText}>A partir d'un editeur de texte</Text>
         </TouchableOpacity>
       </View>
+
+      <BtnHelp />
+
     </View>
   );
 }
@@ -43,13 +46,22 @@ const styles = StyleSheet.create({
   cours: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-around",
-    flexWrap: "wrap",
+    justifyContent: "space-between", 
+    flexWrap: "wrap",  
+    width: '100%',  
+    paddingHorizontal: 20,  
   },
   button : {
-    backgroundColor: "#F4F8FA"
+    backgroundColor: "#F4F8FA",
+    height: 147,
+    width: '48%',  
+    padding: 10,
+    marginTop: 20,
+    borderRadius: 20,
+    marginBottom: 20,  
   }, 
   buttonText: {
-    color: "black"
+    color: "black",
+    textAlign: 'center',  
   }
 });
