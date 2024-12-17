@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import NavBar from "@/components/ui/NavBar";
+import MatiereItem from "@/components/ui/MatBtn";
 
 export default function PageWithTitle() {
   return (
@@ -8,63 +9,33 @@ export default function PageWithTitle() {
       <NavBar route={"/profile"} />
       <View style={styles.header}>
         <Text style={styles.title}>Vos matières</Text>
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Nouveau dossier</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.matieres}>
-        <TouchableOpacity style={styles.matiere}>
-          <View style={styles.leftSection}>
-            <Image 
-                source={require('@/assets/images/IconesCours/lhistoire.png')}
-                style={styles.icones} 
-            />
-            <Text style={styles.matiereText}>Histoire</Text>
-          </View>
-          <Image 
-            source={require('@/assets/images/BackArrow.png')} 
-            style={styles.arrow} 
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.matiere}>
-          <View style={styles.leftSection}>
-            <Image 
-                source={require('@/assets/images/IconesCours/mathematiques.png')}
-                style={styles.icones} 
-            />
-            <Text style={styles.matiereText}>Mathématique</Text>
-          </View>
-          <Image 
-            source={require('@/assets/images/BackArrow.png')} 
-            style={styles.arrow} 
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.matiere}>
-          <View style={styles.leftSection}>
-            <Image 
-                source={require('@/assets/images/IconesCours/globe.png')}
-                style={styles.icones} 
-            />
-            <Text style={styles.matiereText}>Français</Text>
-          </View>
-          <Image 
-            source={require('@/assets/images/BackArrow.png')} 
-            style={styles.arrow} 
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.matiere}>
-          <View style={styles.leftSection}>
-            <Image 
-                source={require('@/assets/images/IconesCours/la-physique.png')}
-                style={styles.icones} 
-            />
-            <Text style={styles.matiereText}>Physique Chimie</Text>
-          </View>
-          <Image 
-            source={require('@/assets/images/BackArrow.png')} 
-            style={styles.arrow} 
-          />
-        </TouchableOpacity>
+      <ScrollView style={styles.matieres}
+      contentContainerStyle={{ paddingBottom: 85 }}
+      >
+        <MatiereItem 
+          text="Histoire" 
+          iconSource={require('@/assets/images/IconesCours/lhistoire.png')} 
+          onPress={() => console.log("Histoire sélectionnée")} 
+        />
+        <MatiereItem 
+          text="Mathématique" 
+          iconSource={require('@/assets/images/IconesCours/mathematiques.png')} 
+          onPress={() => console.log("Mathématique sélectionnée")} 
+        />
+        <MatiereItem 
+          text="Français" 
+          iconSource={require('@/assets/images/IconesCours/globe.png')} 
+          onPress={() => console.log("Français sélectionné")} 
+        />
+        <MatiereItem 
+          text="Physique Chimie" 
+          iconSource={require('@/assets/images/IconesCours/la-physique.png')} 
+          onPress={() => console.log("Physique Chimie sélectionnée")} 
+        />
       </ScrollView>
     </View>
   );
@@ -83,21 +54,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', 
     alignItems: 'center', 
     paddingHorizontal: 16, 
-    paddingVertical: 8, 
+    paddingVertical: 8,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
   },
+  button: {
+    padding: 10,
+    backgroundColor: "#0B93FD",
+    borderRadius: 20
+  },
   buttonText: {
     fontSize: 16,
-    color: '#007BFF',
+    color: 'white',
   },
   matieres: {
     width: "80%",
     display: "flex",
     flexDirection: "column",
+    marginBottom: 20,
   },
   matiere: {
     width: "100%",

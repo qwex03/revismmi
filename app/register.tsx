@@ -1,26 +1,18 @@
 import React from "react";
 import BtnHelp from "@/components/ui/BtnHelp";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import { useRouter } from "expo-router";
 
+const RegisterPage = () => {
+  const router = useRouter();
 
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
-const LoginPage = () => {
   return (
     <View style={styles.container}>
-      {/* Titre principal */}
       <Text style={styles.title}>RévisMMI</Text>
 
-      {/* Bloc de connexion */}
       <View style={styles.loginBox}>
         <Text style={styles.subtitle}>Inscription</Text>
 
-        {/* Champs d'entrée */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -45,9 +37,8 @@ const LoginPage = () => {
           placeholderTextColor="#aaa"
         />
 
-        {/* Bouton de connexion */}
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>S'inscrire</Text>
+          <Text style={styles.buttonText} onPress={() => {router.push('/roles')}}>S'inscrire</Text>
         </TouchableOpacity>
       </View>
 
@@ -105,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default RegisterPage;

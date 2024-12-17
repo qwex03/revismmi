@@ -31,13 +31,8 @@ export default function SettingsPage() {
         <Text style={styles.title}>Paramètres</Text>
       </View>
 
-      {/* Liste des boutons de paramètres */}
       <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
         <Text style={styles.buttonText}>Informations personnelles</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Notifications</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={() => {router.push('/politique')}}>

@@ -4,17 +4,17 @@ import { useRouter } from "expo-router";
 
 
 export default function RolesPages () {
-
+  const router = useRouter();
 
     return(
         <View style={styles.container}>
             <Text style={styles.title}>RévisMMI</Text>
             <View style={styles.rolesBox}>
                 <Text style={styles.subtitle}>Je suis</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => {router.push('/')}}>
                     <Text style={styles.buttonText}>Etudiant</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => {router.push('/')}}>
                     <Text style={styles.buttonText}>Enseignant</Text>
                 </TouchableOpacity>
             </View>

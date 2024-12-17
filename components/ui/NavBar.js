@@ -16,7 +16,10 @@ const NavBar = ({ route, color = "#000000" }) => {
 
     return (
         <View style={styles.nav}>
-            <TextInput style={styles.input} /> 
+            <TextInput style={styles.input}
+            placeholder='Rechercher un cours, une Flashcard, un Quiz'
+            placeholderTextColor="black"
+            /> 
             <TouchableOpacity style={styles.container} onPress={handlePress}>
                 <Image 
                     source={require('@/assets/images/Profile.png')} 
@@ -33,15 +36,21 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "80%",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: 20,
+        marginBottom: 20
     },
     picture: {
         borderRadius: "50%",
-        height: "34px",
-        width: "34px"
+        height: "68px",
+        width: "68px"
     }, 
     input: {
         height: 33,
+        padding: 10,
+        borderRadius: 20,
+        backgroundColor: "white",
+        width: "80%"
     }
 });
 

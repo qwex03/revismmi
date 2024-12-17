@@ -17,41 +17,37 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: {
-          backgroundColor: Colors[colorScheme ?? 'light'].background,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          overflow: 'hidden',
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 70,
-          borderTopWidth: 0,
-          paddingBottom: 10, 
-        },
-        tabBarLabelStyle: {
-          fontSize: isSmallDevice ? 10 : 12,
-          textAlign: 'center',
-          marginTop: 2,  
-          paddingBottom: 4,  
-        },
-        tabBarIconStyle: {
-          marginBottom: isSmallDevice ? 0 : -5,
-        },
-        tabBarItemStyle: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          paddingVertical: 5,  
-        },
-      }}
+   
+    screenOptions={{
+      tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      headerShown: false,
+      tabBarButton: HapticTab,
+      tabBarBackground: TabBarBackground,
+      tabBarStyle: {
+        backgroundColor: Colors[colorScheme ?? 'light'].background,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: 90,
+        paddingBottom: 10,
+      },
+      tabBarItemStyle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+      },
+      tabBarIconStyle: {
+        marginBottom: 4,
+      },
+      tabBarLabelStyle: {
+        fontSize: 12,
+        marginTop: 4,
+      },
+    }}
     >
       <Tabs.Screen
         name="index"
