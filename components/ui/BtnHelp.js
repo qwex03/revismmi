@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, ScrollView, StyleSheet, Button } from 'react-native';
 
-const BtnHelp = ({title, text}) => {
+const BtnHelp = ({title, text, color = "#0B93FD"}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -10,7 +10,7 @@ const BtnHelp = ({title, text}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.helpButton} onPress={toggleModal}>
+      <TouchableOpacity style={[styles.helpButton, {backgroundColor: color}]} onPress={toggleModal}>
         <Text style={styles.buttonText}>Aide ?</Text>
       </TouchableOpacity>
 
@@ -23,7 +23,9 @@ const BtnHelp = ({title, text}) => {
         <View style={styles.overlay}>
           <View style={styles.modal}>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.modalText}>{text}</Text>
+            <ScrollView style={styles.scroll}>
+                <Text style={styles.modalText}>{text}</Text>
+            </ScrollView>
             <Button style={styles.helpButton} title="Fermer" onPress={toggleModal} />
           </View>
         </View>
@@ -40,7 +42,6 @@ const styles = StyleSheet.create({
   },
   helpButton: {
     padding: 20,
-    backgroundColor: '#0B93FD',
     borderRadius: 5,
   },
   buttonText: {
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modal: {
-    width: 300,
+    width: 340,
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -71,6 +72,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 18,
   },
+  scroll: {
+    maxHeight: "400px",
+    marginBottom: 25,
+  }
 });
 
 export default BtnHelp;

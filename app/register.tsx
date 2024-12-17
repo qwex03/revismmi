@@ -1,4 +1,7 @@
 import React from "react";
+import BtnHelp from "@/components/ui/BtnHelp";
+
+
 import {
   StyleSheet,
   Text,
@@ -47,6 +50,8 @@ const LoginPage = () => {
           <Text style={styles.buttonText}>S'inscrire</Text>
         </TouchableOpacity>
       </View>
+
+      <BtnHelp color={"#9DC3E0"} title={"Comment s'inscrire ?"} text={"L'inscription sur RévisMMI est simple et rapide. Suivez ces étapes : Saisissez votre email : Entrez une adresse email valide, qui sera utilisée pour vous identifier et récupérer votre compte en cas d'oubli de mot de passe. Choisissez un mot de passe : Créez un mot de passe sécurisé pour protéger votre compte. Il doit comporter au moins 6 caratères, avec des chiffres et des lettres pour plus de sécurité. Confirmez votre mot de passe : Pour vous assurer que vous n'avez pas fait de faute de frappe, saisissez à nouveau votre mot de passe dans ce champ. Sélectionnez un pseudo : Choisissez un pseudo unique qui sera visible sur votre profil et dans vos interactions sur la plateforme. Une fois ces informations saisies, cliquez sur S'inscrire pour finaliser votre inscription."} />
     </View>
   );
 };
