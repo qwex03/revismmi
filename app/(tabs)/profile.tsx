@@ -35,10 +35,6 @@ export default function SettingsPage() {
         <Text style={styles.buttonText}>Informations personnelles</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Notifications</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity style={styles.button} onPress={() => { router.push('/politique') }}>
         <Text style={styles.buttonText}>Politique de confidentialité</Text>
       </TouchableOpacity>
