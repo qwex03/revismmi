@@ -19,7 +19,7 @@ const BackArrow = ({ route, color = "#000000" }) => {
             onPress={handlePress}
         >
             <Image 
-                source={require('@/assets/images/BackArrow.png')} 
+                source={require('../../assets/images/BackArrow.png')} 
                 style={[styles.arrow, { tintColor: color }]} 
             />
         </TouchableOpacity>

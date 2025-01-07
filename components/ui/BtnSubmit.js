@@ -16,7 +16,7 @@ const BtnSubmit = ({ test }) => {
 const styles = StyleSheet.create({
     container: {
         borderRadius: 20,
-        padding: "1em",
+        padding: 20,
         backgroundColor: "#0B93FD",
         textAlign: "center",
     },

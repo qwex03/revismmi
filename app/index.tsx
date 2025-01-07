@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 
-const ChoiceLoginPage = () => {
+const IndexPage = () => {
     const router = useRouter();
 
     const handleRegister = () => {
@@ -64,4 +64,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default ChoiceLoginPage;
+export default IndexPage;

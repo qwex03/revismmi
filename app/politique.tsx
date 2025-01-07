@@ -1,8 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
 import BackArrow from "@/components/ui/BackArrow";
+import { useRouter } from "expo-router";
+
 
 const PolitiquePage = () => {
+  const router = useRouter();
+
 
     return(
         <View style={styles.container}>
@@ -119,7 +123,7 @@ const PolitiquePage = () => {
                 </ScrollView>
             </View>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity onPress={() => {router.push("/home")}} style={styles.button}>
                 <Text style={styles.buttonText}>J'accepte</Text>
             </TouchableOpacity>
         </View>
@@ -136,6 +140,7 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
       padding: 20,
+      paddingTop: 45
     },
     header: {
       display: "flex",

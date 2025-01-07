@@ -3,22 +3,18 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from "reac
 import { useState } from 'react';
 import { useRouter } from "expo-router";
 import BackArrow from "@/components/ui/BackArrow"; 
-import ProfilePicture from "@/components/ui/ProfilePictures";
 import BtnSubmit from "@/components/ui/BtnSubmit";
 
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [pseudo, setPseudo] = useState('');
-  const [email, setEmail] = useState('');
-  const [motDePasse, setMotDePasse] = useState('');
+  const [nom, setNom] = useState('');
+  
 
   
   const handleSubmit = () => {
     const formData = {
-      email,
-      motDePasse,
-      pseudo,
+      nom,
     };
 
     console.log("Données du formulaire : ", formData);
@@ -27,38 +23,20 @@ export default function SettingsPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pseudo</Text>
-
-      <ProfilePicture />
 
       <View style={styles.header}>
-        <BackArrow route={"/profile"} />
-        <Text style={styles.title}>Paramètres</Text>
+        <BackArrow route={"/revise"} />
+        <Text style={styles.title}>Cours</Text>
       </View>
 
-      <Text style={styles.section}>Informations personnelles</Text>
+      <Text style={styles.section}>Ajout d'un dossier</Text>
 
       <TextInput
           style={styles.input}
-          placeholder="Nouveau mail"
+          placeholder="Nouveau nom du dossier"
           placeholderTextColor="#aaa"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Nouveau Mot de passe"
-          secureTextEntry={true}
-          placeholderTextColor="#aaa"
-          value={motDePasse}
-          onChangeText={setMotDePasse}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Changez de pseudo"
-          placeholderTextColor="#aaa"
-          value={pseudo}
-          onChangeText={setPseudo}
+          value={nom}
+          onChangeText={setNom}
         />
         <BtnSubmit test={handleSubmit}/>
     </View>

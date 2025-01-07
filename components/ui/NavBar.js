@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Image, TextInput, StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
-import { View } from 'react-native-web';
+import { View } from 'react-native';
 
 const NavBar = ({ route, color = "#000000" }) => { 
     const router = useRouter();
@@ -41,16 +41,16 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     picture: {
-        borderRadius: "50%",
-        height: "68px",
-        width: "68px"
+        borderRadius: 50,
+        height: "32px",
+        width: "32px"
     }, 
     input: {
         height: 33,
         padding: 10,
         borderRadius: 20,
         backgroundColor: "white",
-        width: "80%"
+        width: "60%"
     }
 });
 

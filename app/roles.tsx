@@ -11,10 +11,10 @@ export default function RolesPages () {
             <Text style={styles.title}>RévisMMI</Text>
             <View style={styles.rolesBox}>
                 <Text style={styles.subtitle}>Je suis</Text>
-                <TouchableOpacity style={styles.button} onPress={() => {router.push('/')}}>
+                <TouchableOpacity style={styles.button} onPress={() => {router.push('/politique')}}>
                     <Text style={styles.buttonText}>Etudiant</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => {router.push('/')}}>
+                <TouchableOpacity style={styles.button} onPress={() => {router.push('/politique')}}>
                     <Text style={styles.buttonText}>Enseignant</Text>
                 </TouchableOpacity>
             </View>

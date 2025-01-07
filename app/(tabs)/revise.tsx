@@ -1,56 +1,67 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import NavBar from "@/components/ui/NavBar";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import SearchBar from '@/components/ui/SearchBar';
 import MatiereItem from "@/components/ui/MatBtn";
+import { useRouter } from "expo-router";
+
 
 export default function PageWithTitle() {
+  const router = useRouter();
+
+
   return (
-    <View style={styles.container}>
-      <NavBar route={"/profile"} />
-      <View style={styles.header}>
-        <Text style={styles.title}>Vos matières</Text>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Nouveau dossier</Text>
-        </TouchableOpacity>
+    <SafeAreaView  style={styles.safeContainer}>
+      <View style={styles.container}>
+      <SearchBar />
+        <View style={styles.header}>
+          <Text style={styles.title}>Vos matières</Text>
+          <TouchableOpacity onPress={() => {router.push('/newcours')}} style={styles.button}>
+            <Text style={styles.buttonText}>Nouveau dossier</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={styles.matieres}
+        contentContainerStyle={{ paddingBottom: 85 }}
+        >
+          <MatiereItem 
+            text="Histoire" 
+            iconSource={require('@/assets/images/IconesCours/lhistoire.png')} 
+            onPress={() => {router.push('/test')}}
+          />
+          <MatiereItem 
+            text="Mathématique" 
+            iconSource={require('@/assets/images/IconesCours/mathematiques.png')} 
+            onPress={() => console.log("Mathématique sélectionnée")} 
+          />
+          <MatiereItem 
+            text="Français" 
+            iconSource={require('@/assets/images/IconesCours/globe.png')} 
+            onPress={() => console.log("Français sélectionné")} 
+          />
+          <MatiereItem 
+            text="Physique Chimie" 
+            iconSource={require('@/assets/images/IconesCours/la-physique.png')} 
+            onPress={() => console.log("Physique Chimie sélectionnée")} 
+          />
+        </ScrollView>
       </View>
-      <ScrollView style={styles.matieres}
-      contentContainerStyle={{ paddingBottom: 85 }}
-      >
-        <MatiereItem 
-          text="Histoire" 
-          iconSource={require('@/assets/images/IconesCours/lhistoire.png')} 
-          onPress={() => console.log("Histoire sélectionnée")} 
-        />
-        <MatiereItem 
-          text="Mathématique" 
-          iconSource={require('@/assets/images/IconesCours/mathematiques.png')} 
-          onPress={() => console.log("Mathématique sélectionnée")} 
-        />
-        <MatiereItem 
-          text="Français" 
-          iconSource={require('@/assets/images/IconesCours/globe.png')} 
-          onPress={() => console.log("Français sélectionné")} 
-        />
-        <MatiereItem 
-          text="Physique Chimie" 
-          iconSource={require('@/assets/images/IconesCours/la-physique.png')} 
-          onPress={() => console.log("Physique Chimie sélectionnée")} 
-        />
-      </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    paddingTop: "12%",
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#CFDFEC', 
+    backgroundColor: '#E5F0FB',
+    padding: 16,
   },
   header: {
     flexDirection: 'row', 
-    width: '80%', 
+    width: '100%', 
     justifyContent: 'space-between', 
     alignItems: 'center', 
     paddingHorizontal: 16, 
@@ -72,7 +83,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   matieres: {
-    width: "80%",
+    width: "100%",
     display: "flex",
     flexDirection: "column",
     marginBottom: 20,

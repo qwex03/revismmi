@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { useRouter } from "expo-router";
 import BtnHelp from "@/components/ui/BtnHelp";
 
@@ -7,32 +7,40 @@ export default function PageWithTitle() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Créer un nouveau cours</Text>
+    <SafeAreaView style={styles.safeContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Créer un nouveau cours</Text>
 
-      <View style={styles.cours}>
-        <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
-          <Text style={styles.buttonText}>A partir d'un fichier</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
-          <Text style={styles.buttonText}>Prendre une Photo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
-          <Text style={styles.buttonText}>A partir d'une image</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
-          <Text style={styles.buttonText}>A partir d'un editeur de texte</Text>
-        </TouchableOpacity>
+        <View style={styles.cours}>
+          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+            <Text style={styles.buttonText}>A partir d'un fichier</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+            <Text style={styles.buttonText}>Prendre une Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+            <Text style={styles.buttonText}>A partir d'une image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+            <Text style={styles.buttonText}>A partir d'un editeur de texte</Text>
+          </TouchableOpacity>
+        </View>
+
+        <BtnHelp title={"Comment créer un cours ?"} text={"Un cours est un espace pour apprendre, réviser, et se tester. Pour créer un cours, sélectionnez la manière dont vous voulez ajouter le contenu au cours (photo, importation d’un document, saisie du contenu dans un editeur de texte). Ensuite choississez un dossier dans lequel sera enregistré votre cours. Ensuite, l’IA se chargera de transformer vos notes/cours en cours et en flashcards."} />
+
       </View>
-
-      <BtnHelp title={"Comment créer un cours ?"} text={"Un cours est un espace pour apprendre, réviser, et se tester. Pour créer un cours, sélectionnez la manière dont vous voulez ajouter le contenu au cours (photo, importation d’un document, saisie du contenu dans un editeur de texte). Ensuite choississez un dossier dans lequel sera enregistré votre cours. Ensuite, l’IA se chargera de transformer vos notes/cours en cours et en flashcards."} />
-
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    paddingTop: "12%",
+  },
   container: {
+    paddingTop: 50,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,6 +1,6 @@
 import React from "react";
 import BtnHelp from "@/components/ui/BtnHelp";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {  StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import { useRouter } from "expo-router";
 
 const RegisterPage = () => {
@@ -37,8 +37,8 @@ const RegisterPage = () => {
           placeholderTextColor="#aaa"
         />
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText} onPress={() => {router.push('/roles')}}>S'inscrire</Text>
+        <TouchableOpacity style={styles.button}  onPress={() => {router.push('/roles')}}>
+          <Text style={styles.buttonText}>S'inscrire</Text>
         </TouchableOpacity>
       </View>
 
@@ -50,9 +50,9 @@ const RegisterPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0B93FD",
-    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#0B93FD",
+    paddingTop: 50
   },
   title: {
     fontSize: 32,

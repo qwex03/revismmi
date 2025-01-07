@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert, ScrollView, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import ProfilePicture from "@/components/ui/ProfilePictures";
 
@@ -22,39 +22,46 @@ export default function SettingsPage() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-      <Text style={styles.title}>Pseudo</Text>
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.title}>Pseudo</Text>
 
-      <ProfilePicture />
+        <ProfilePicture />
 
-      <View>
-        <Text style={styles.title}>Paramètres</Text>
-      </View>
+        <View>
+          <Text style={styles.title}>Paramètres</Text>
+        </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => { router.push('/settings-change') }}>
-        <Text style={styles.buttonText}>Informations personnelles</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => { router.push('/settings-change') }}>
+          <Text style={styles.buttonText}>Informations personnelles</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => { router.push('/politique') }}>
-        <Text style={styles.buttonText}>Politique de confidentialité</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => { router.push('/politique') }}>
+          <Text style={styles.buttonText}>Politique de confidentialité</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => { router.push('/politique') }}>
-        <Text style={styles.buttonText}>Conditions générales d'utilisation</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => { router.push('/politique') }}>
+          <Text style={styles.buttonText}>Conditions générales d'utilisation</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
-        <Text style={[styles.buttonText, styles.logoutText]}>Se déconnecter</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
+          <Text style={[styles.buttonText, styles.logoutText]}>Se déconnecter</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDeleteAccount}>
-        <Text style={[styles.buttonText, styles.deleteText]}>Supprimer le compte</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={handleDeleteAccount}>
+          <Text style={[styles.buttonText, styles.deleteText]}>Supprimer le compte</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    paddingTop: "12%",
+  },
   container: {
     flex: 1,
     backgroundColor: "#CFE0EC",
