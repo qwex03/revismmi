@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
 import BtnHelp from "@/components/ui/BtnHelp";
 
 export default function PageWithTitle() {
@@ -29,15 +29,11 @@ export default function PageWithTitle() {
         <View style={styles.cours}>
           <TouchableOpacity style={styles.button} onPress={selectFile}>
             <Text style={styles.buttonText}>A partir d'un fichier</Text>
+            <Image source={require('@/assets/images/files.png')} style={{ width: 50, height: 50, alignSelf: 'center', marginTop: 10 }} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => {}}>
             <Text style={styles.buttonText}>Prendre une Photo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Text style={styles.buttonText}>A partir d'une image</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Text style={styles.buttonText}>A partir d'un editeur de texte</Text>
+            <Image source={require('@/assets/images/photo.png')} style={{ width: 50, height: 50, alignSelf: 'center', marginTop: 10 }} />
           </TouchableOpacity>
         </View>
 

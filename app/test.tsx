@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import RenderHTML from "react-native-render-html";
 import MarkdownIt from "markdown-it";
@@ -9,6 +9,23 @@ import Quiz from "@/components/ui/Quiz";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Entrainement");
+  const [cour, setCour] = useState({});
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/1');
+      const json = await response.json();
+      setCour(json);
+      console.log("Json : ", json);
+      console.log("Cours : ", cour);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const testData = {
     "nom": "Cours de maths",
@@ -79,7 +96,7 @@ export default function SettingsPage() {
         <View style={styles.content}>
           {activeTab === "Entrainement" && (
             <View style={styles.ResumeContainer}>
-              <Quiz data={testData} />
+                <Quiz data={testData} />
             </View>
           )}
           {activeTab === "Résumé" && (

@@ -39,6 +39,7 @@ export default function RootLayout() {
           <Stack.Screen name="test" options={{ headerShown: false }} />
           <Stack.Screen name="newcours" options={{ headerShown: false }} />
           <Stack.Screen name="upload" options={{ headerShown: false }} />
+          <Stack.Screen name="condition" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />

@@ -13,7 +13,7 @@ const PolitiquePage = () => {
             
             <View style={styles.header}>
               <BackArrow color="white" route={"/profile"} />
-              <Text style={styles.title}>Politique de confidentialité</Text>
+              <Text style={styles.title}>Conditions générales d'utilisation</Text>
             </View>
             
             <View style={styles.section}>

@@ -7,7 +7,6 @@ const Quiz = ({ data }) => {
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFlashcardAnswer, setShowFlashcardAnswer] = useState(false);
-
   const currentCard = data.cartes[currentCardIndex];
 
   const handleSelectAnswer = (index) => {
@@ -19,7 +18,7 @@ const Quiz = ({ data }) => {
   };
 
   const validateAnswers = () => {
-    if (currentCard.type === "QCM") {
+    if (currentCard.type === "qcm") {  
       const correctAnswers = currentCard.reponses
         .map((item, index) => (item.correcte ? index : null))
         .filter((index) => index !== null);
@@ -32,14 +31,12 @@ const Quiz = ({ data }) => {
         setScore(score + 1);
       }
     }
-
-    goToNextCard();
   };
 
   const goToNextCard = () => {
     if (currentCardIndex + 1 < data.cartes.length) {
       setCurrentCardIndex(currentCardIndex + 1);
-      setSelectedAnswers([]);
+      setSelectedAnswers([]); 
       setShowFlashcardAnswer(false);
     } else {
       setShowScore(true);
@@ -74,7 +71,7 @@ const Quiz = ({ data }) => {
               <View>
                 {showFlashcardAnswer ? (
                   <Text style={styles.flashcardAnswer}>
-                    {currentCard.reponses[0].reponse}
+                    {currentCard.reponses.reponse}
                   </Text>
                 ) : (
                   <Text style={styles.flashcardAnswer}>
@@ -89,12 +86,11 @@ const Quiz = ({ data }) => {
                     {showFlashcardAnswer ? "Masquer le verso" : "Révéler le verso"}
                   </Text>
                 </TouchableOpacity>
+
+                {/* Afficher le bouton Suivant uniquement après avoir vu la réponse */}
                 {showFlashcardAnswer && (
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={goToNextCard}
-                  >
-                    <Text style={styles.buttonText}>Carte Suivante</Text>
+                  <TouchableOpacity style={styles.button} onPress={goToNextCard}>
+                    <Text style={styles.buttonText}>Suivant</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -116,9 +112,16 @@ const Quiz = ({ data }) => {
               />
             )}
 
-            {currentCard.type === "QCM" && (
+            {currentCard.type === "qcm" && (
               <TouchableOpacity style={styles.button} onPress={validateAnswers}>
                 <Text style={styles.buttonText}>Valider</Text>
+              </TouchableOpacity>
+            )}
+
+            {/* Afficher le bouton Suivant pour les QCM uniquement après validation des réponses */}
+            {currentCard.type === "qcm" && selectedAnswers.length > 0 && (
+              <TouchableOpacity style={styles.button} onPress={goToNextCard}>
+                <Text style={styles.buttonText}>Suivant</Text>
               </TouchableOpacity>
             )}
           </View>
