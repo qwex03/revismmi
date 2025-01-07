@@ -11,49 +11,40 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Entrainement");
 
   const testData = {
-    cartes: [
+    "nom": "Cours de maths",
+    "id_createur": 1,
+    "id_categorie": 1,
+    "resume": "Un cours de maths complet pour apprendre les bases et concepts avancés.",
+    "cartes": [
       {
-        question: "Quelle est la capitale de la France ?",
-        reponses: [
-          { reponse: "Paris" },
-          { reponse: "Londres" },
-          { reponse: "Berlin" },
-          { reponse: "Madrid" },
-        ],
-        bonnesReponses: [0],
-        type: "qcm",
-      },
-      {
-        question: "Sélectionnez les langages de programmation (choix multiples) :",
-        reponses: [
-          { reponse: "JavaScript" },
-          { reponse: "HTML" },
-          { reponse: "Python" },
-          { reponse: "CSS" },
-        ],
-        bonnesReponses: [0, 2],
-        type: "qcm",
-      },
-      {
-        question: "Le soleil est une étoile. Vrai ou Faux ?",
-        reponses: [
-          { reponse: "Vrai" },
-          { reponse: "Faux" },
-        ],
-        bonnesReponses: [0],
-        type: "qcm",
-      },
-      {
-        "question": "exemple de recto de flashcard",
+        "question": "Quelle est la capitale de la France ?",
         "reponses": [
-              { "reponse": "exemple de verso de flashcard" }
+          { "reponse": "Paris", "correcte": true },
+          { "reponse": "Londres" },
+          { "reponse": "Berlin" }
         ],
-        "bonnesReponses": null,
+        "type": "QCM"
+      },
+      {
+        "question": "Combien font 2 + 2 ?",
+        "reponses": [
+          { "reponse": "3" },
+          { "reponse": "4", "correcte": true },
+          { "reponse": "5" },
+          { "reponse": "6" }
+        ],
+        "type": "QCM"
+      },
+      {
+        "question": "Qu'est-ce que le théorème de Pythagore ?",
+        "reponses": [
+          { "reponse": "C'est une règle mathématique sur les triangles." }
+        ],
         "type": "flashcard"
-    }  
-    ],
-  };
-
+      }
+    ]
+  }
+  
   const mdParser = new MarkdownIt().use(markdownItKatex);
 
   const markdown = `
@@ -110,14 +101,54 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     paddingTop: "12%",
   },
-  container: { flex: 1, alignItems: "center", backgroundColor: "#F1FAEE" },
-  header: { flexDirection: "row", width: "80%", justifyContent: "space-around", alignItems: "center" },
-  onglet: { backgroundColor: "#A8DADC", padding: 15, borderTopLeftRadius: 20, borderTopRightRadius: 20, width: "45%", alignItems: "center" },
-  activeTab: { backgroundColor: "#457B9D" },
-  textOnglet: { color: "white", fontWeight: "bold" },
-  content: { flex: 1, justifyContent: "center", alignItems: "center", width: "100%", backgroundColor: "#457B9D" },
-  contentText: { fontSize: 18, fontWeight: "bold", color: "#333", marginBottom: 20 },
-  ResumeContainer: { backgroundColor: "white", width: "80%", padding: 20, borderRadius: 20, flex: 1 },
-  scrollContainer: { paddingBottom: 20 },
+  container: { 
+    flex: 1, 
+    alignItems: "center", 
+    backgroundColor: "#F1FAEE" 
+  },
+  header: { 
+    flexDirection: "row", 
+    width: "80%", 
+    justifyContent: "space-around", 
+    alignItems: "center" 
+  },
+  onglet: { 
+    backgroundColor: "#A8DADC", 
+    padding: 15, 
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20, 
+    width: "45%", 
+    alignItems: "center" 
+  },
+  activeTab: { 
+    backgroundColor: "#457B9D" 
+  },
+  textOnglet: { 
+    color: "white", 
+    fontWeight: "bold" 
+  },
+  content: { 
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    width: "100%", 
+    backgroundColor: "#457B9D" 
+  },
+  contentText: { 
+    fontSize: 18, 
+    fontWeight: "bold", 
+    color: "#333", 
+    marginBottom: 20 
+  },
+  ResumeContainer: { 
+    backgroundColor: "white", 
+    width: "80%", 
+    padding: 20, 
+    borderRadius: 20, 
+    flex: 1 
+  },
+  scrollContainer: { 
+    paddingBottom: 20 
+  },
 });
 

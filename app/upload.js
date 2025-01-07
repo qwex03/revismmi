@@ -10,7 +10,7 @@ const FileUploader = () => {
   const selectFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: "*/*", // allows selection of all file types
+        type: "*/*", 
         copyToCacheDirectory: true,
       });
       if (result) {

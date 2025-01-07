@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as DocumentPicker from 'expo-document-picker';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { useRouter } from "expo-router";
 import BtnHelp from "@/components/ui/BtnHelp";
 
 export default function PageWithTitle() {
-  const router = useRouter();
+  const [file, setFile] = useState(null);
+
+  const selectFile = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "*/*", 
+        copyToCacheDirectory: true,
+      });
+      if (result) {
+        setFile(result.assets[0]);
+        console.log('File picked: ', result.assets[0]);
+      }
+    } catch (err) {
+      console.error('Error picking document: ', err);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -12,16 +27,16 @@ export default function PageWithTitle() {
         <Text style={styles.title}>Créer un nouveau cours</Text>
 
         <View style={styles.cours}>
-          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+          <TouchableOpacity style={styles.button} onPress={selectFile}>
             <Text style={styles.buttonText}>A partir d'un fichier</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
             <Text style={styles.buttonText}>Prendre une Photo</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
             <Text style={styles.buttonText}>A partir d'une image</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => {router.push('/settings-change')}}>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
             <Text style={styles.buttonText}>A partir d'un editeur de texte</Text>
           </TouchableOpacity>
         </View>
