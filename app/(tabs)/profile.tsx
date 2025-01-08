@@ -2,12 +2,31 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert, ScrollView, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import ProfilePicture from "@/components/ui/ProfilePictures";
+import * as SecureStore from 'expo-secure-store';
 
 export default function SettingsPage() {
   const router = useRouter();
 
+  const DeleteToken = async () => {
+    return await SecureStore.deleteItemAsync('token');
+  };
+
   const handleLogout = () => {
-    Alert.alert("Déconnexion", "Vous êtes maintenant déconnecté.");
+    Alert.alert("Déconnexion",
+       "Voulez-vous vraiment vous déconnecter ?",
+      [
+        {
+          text: "Annuler", style: "cancel"
+        }, {
+          text: "Ok",
+          style: "destructive",
+          onPress: async () => {
+            await DeleteToken();
+            router.push('/login');
+          }
+        }
+      ]
+    );
   };
 
   const handleDeleteAccount = () => {

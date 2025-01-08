@@ -1,14 +1,19 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-const CourseCard = ({ title, creator }) => {
+const CourseCard = ({ title, creator, date, onPress }) => {
   return (
-    <View style={styles.card}>
-      <Text style={styles.icon}>📚</Text>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>Créateur : {creator}</Text>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.card}>
+        <Text style={styles.icon}>📚</Text>
+        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+          {title}
+        </Text>
+        <Text style={styles.subtitle}>Créateur : {creator}</Text>
+        <Text style={styles.subtitle}>Dernière visite : {date}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -29,8 +34,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
+    textAlign: 'center',
+    width: 150,    
   },
   subtitle: {
     fontSize: 12,

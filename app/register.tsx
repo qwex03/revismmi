@@ -38,7 +38,7 @@ const RegisterPage = () => {
         />
 
         <TouchableOpacity style={styles.button}  onPress={() => {router.push('/roles')}}>
-          <Text style={styles.buttonText}>S'inscrire</Text>
+          <Text style={styles.buttonText}>Suivant</Text>
         </TouchableOpacity>
       </View>
 

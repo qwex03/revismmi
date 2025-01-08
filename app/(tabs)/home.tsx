@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, FlatList, SafeAreaView } from 'react-native';
 import SearchBar from '@/components/ui/SearchBar';
 import SectionTitle from '@/components/ui/SectionTitle';
@@ -6,10 +6,40 @@ import CourseCard from '@/components/ui/CoursCard';
 import AchievementCard from '@/components/ui/AchievementCard';
 import { StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
-
+import * as SecureStore from 'expo-secure-store';
 
 const Dashboard = () => {
   const router = useRouter();
+  const [coursRecents, setCourRecents] = useState(null);
+
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userId = await getToken();
+        console.log(userId);
+        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/coursrecents`);
+        const json = await response.json();
+        setCourRecents(json);
+        console.log("Cours Recents :", coursRecents);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const formatDate = (dateStr: string) => {
+    const dateObj = new Date(dateStr);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
+  }
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -19,9 +49,12 @@ const Dashboard = () => {
         <View style={styles.list}>
         <SectionTitle title="Vos dernières Liste de Cours" onSeeAll={() => {router.push("/revise")}} />
         <FlatList
-          data={[{ title: 'Probabilités', creator: 'Vous' }, { title: 'Histoires', creator: 'Vous' }, { title: 'Mathématiques', creator: 'Vous' }, { title: 'Mathématiques', creator: 'Vous' }]}
+          data={coursRecents}
           horizontal
-          renderItem={({ item }) => <CourseCard title={item.title} creator={item.creator} />}
+          renderItem={({ item }) => <CourseCard title={item.nom} creator={item.createur} date={formatDate(item.derniere_visite.date)} onPress={() => router.push({
+            pathname: '/test',
+            params: { testId: item.id },
+          })} />}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={[styles.horizontalList, styles.lastcours]}
         />
@@ -74,7 +107,6 @@ const styles =  StyleSheet.create({
   },
   lastcours: {
     height: 150,
-    width: "100%",
     marginBottom: 5,
   },
   list: {

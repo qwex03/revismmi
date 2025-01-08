@@ -1,11 +1,27 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
 import BackArrow from "@/components/ui/BackArrow";
 import { useRouter } from "expo-router";
-
+import * as SecureStore from 'expo-secure-store';
 
 const PolitiquePage = () => {
   const router = useRouter();
+  const [hasToken, SetHasToken] = useState(false);
+
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+  useEffect(() => {
+    const token = async () => {
+      const token = await getToken();
+      if(token) {
+        SetHasToken(true);
+      }
+    }
+
+    token();
+    }, []);
 
 
     return(
@@ -122,10 +138,11 @@ const PolitiquePage = () => {
                     </Text>
                 </ScrollView>
             </View>
-
+            {!hasToken && (
             <TouchableOpacity onPress={() => {router.push("/home")}} style={styles.button}>
                 <Text style={styles.buttonText}>J'accepte</Text>
             </TouchableOpacity>
+            )}
         </View>
     )
 

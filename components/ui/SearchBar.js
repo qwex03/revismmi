@@ -5,14 +5,16 @@ import { useRouter } from "expo-router";
 
 
 
-const SearchBar = () => {
+const SearchBar = ({value, onChangeText, placeholder }) => {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Recherche flashcards, cours, classe"
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
       />
       <TouchableOpacity style={styles.profileIcon} onPress={()=> {router.push('/profile')}}>
         <Text>👤</Text>

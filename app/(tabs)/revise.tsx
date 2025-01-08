@@ -1,18 +1,58 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import SearchBar from '@/components/ui/SearchBar';
 import MatiereItem from "@/components/ui/MatBtn";
 import { useRouter } from "expo-router";
-
+import * as SecureStore from 'expo-secure-store';
 
 export default function PageWithTitle() {
   const router = useRouter();
+  const [mat, setMat] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState([]);
 
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userId = await getToken();
+        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories`);
+        const json = await response.json();
+        setMat(json);
+        setFilter(json);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (search === '') {
+      setFilter(mat);
+    } else {
+      setFilter(
+        mat.filter((matiere) => matiere.nom.toLowerCase().includes(search.toLowerCase()))
+      )
+    }
+  }, [search, mat]);
 
   return (
     <SafeAreaView  style={styles.safeContainer}>
       <View style={styles.container}>
-      <SearchBar />
+      <SearchBar
+      placeholder="Rechercher une matière"
+      value={search}
+      onChangeText={(text: string) => setSearch(text)}
+      />
         <View style={styles.header}>
           <Text style={styles.title}>Vos matières</Text>
           <TouchableOpacity onPress={() => {router.push('/newcours')}} style={styles.button}>
@@ -22,26 +62,18 @@ export default function PageWithTitle() {
         <ScrollView style={styles.matieres}
         contentContainerStyle={{ paddingBottom: 85 }}
         >
-          <MatiereItem 
-            text="Histoire" 
-            iconSource={require('@/assets/images/IconesCours/lhistoire.png')} 
-            onPress={() => {router.push('/test')}}
-          />
-          <MatiereItem 
-            text="Mathématique" 
-            iconSource={require('@/assets/images/IconesCours/mathematiques.png')} 
-            onPress={() => console.log("Mathématique sélectionnée")} 
-          />
-          <MatiereItem 
-            text="Français" 
-            iconSource={require('@/assets/images/IconesCours/globe.png')} 
-            onPress={() => console.log("Français sélectionné")} 
-          />
-          <MatiereItem 
-            text="Physique Chimie" 
-            iconSource={require('@/assets/images/IconesCours/la-physique.png')} 
-            onPress={() => console.log("Physique Chimie sélectionnée")} 
-          />
+          {loading ? (
+            <Text>Chargement...</Text>
+          ) : (
+            filter.map((matiere, index) => (
+              <MatiereItem key={index} text={matiere.nom} iconSource={matiere.url_icone} onPress={() => {
+                router.push({
+                  pathname: '/categorie',
+                  params: { catId: matiere.id },
+                });
+              }} />
+            ))
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,12 +7,43 @@ import {
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
 const LoginPage = () => {
   const router = useRouter();
+  const [message, setMessage] = useState('');
+  const [formdata, setFormdata] = useState({
+    email: '',
+    password: '',
+  });
 
-  const handleLogin = () => {
-    router.push('/revise'); 
+  const saveToken = async (token: string) => {
+    const tokenString = JSON.stringify(token); 
+    await SecureStore.setItemAsync('userToken', tokenString)
+  } 
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/connexion`, {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({
+            email: formdata.email,
+            password: formdata.password
+        })
+    });
+    const json = await response.json();
+    if(json.error) {
+      setMessage("Erreur de connexion");
+    } else {
+      await saveToken(json.id);
+      router.push("/home");
+    }
+    } catch (error) {
+      console.error('Error logging in:', error);
+    }
   };
 
   return (
@@ -22,19 +53,25 @@ const LoginPage = () => {
       <View style={styles.loginBox}>
         <Text style={styles.subtitle}>Connectez-vous</Text>
         <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#aaa"
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor="#aaa"
+        value={formdata.email}
+        onChangeText={(text) => setFormdata({ ...formdata, email: text })}
         />
+
         <TextInput
-          style={styles.input}
-          placeholder="Mot de passe"
-          secureTextEntry={true}
-          placeholderTextColor="#aaa"
+        style={styles.input}
+        placeholder="Mot de passe"
+        secureTextEntry={true}
+        placeholderTextColor="#aaa"
+        value={formdata.password}
+        onChangeText={(text) => setFormdata({ ...formdata, password: text })}
         />
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Se connecter</Text>
         </TouchableOpacity>
+        <Text style={styles.error}>{message}</Text>
       </View>
     </View>
   );
@@ -87,6 +124,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  error: {
+    fontSize: 16,
+    color: "red",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
+  }
 });
 
 export default LoginPage;

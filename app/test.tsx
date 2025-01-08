@@ -5,78 +5,55 @@ import MarkdownIt from "markdown-it";
 import markdownItKatex from "markdown-it-katex";
 import BackArrow from "@/components/ui/BackArrow";
 import Quiz from "@/components/ui/Quiz";
-
+import { useLocalSearchParams } from 'expo-router';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Entrainement");
-  const [cour, setCour] = useState({});
+  const [cour, setCour] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { testId } = useLocalSearchParams();
+
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/'+testId);
+        const json = await response.json();
+        setCour(json);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/1');
-      const json = await response.json();
-      setCour(json);
-      console.log("Json : ", json);
-      console.log("Cours : ", cour);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const testData = {
-    "nom": "Cours de maths",
-    "id_createur": 1,
-    "id_categorie": 1,
-    "resume": "Un cours de maths complet pour apprendre les bases et concepts avancés.",
-    "cartes": [
-      {
-        "question": "Quelle est la capitale de la France ?",
-        "reponses": [
-          { "reponse": "Paris", "correcte": true },
-          { "reponse": "Londres" },
-          { "reponse": "Berlin" }
-        ],
-        "type": "QCM"
-      },
-      {
-        "question": "Combien font 2 + 2 ?",
-        "reponses": [
-          { "reponse": "3" },
-          { "reponse": "4", "correcte": true },
-          { "reponse": "5" },
-          { "reponse": "6" }
-        ],
-        "type": "QCM"
-      },
-      {
-        "question": "Qu'est-ce que le théorème de Pythagore ?",
-        "reponses": [
-          { "reponse": "C'est une règle mathématique sur les triangles." }
-        ],
-        "type": "flashcard"
-      }
-    ]
-  }
-  
   const mdParser = new MarkdownIt().use(markdownItKatex);
-
   const markdown = `
-# Cours de Mathématiques - Introduction à l'Algèbre
-...
-`;
+  # Cours de Mathématiques - Introduction à l'Algèbre
+  ...
+  `;
 
-  const htmlContent = mdParser.render(markdown);
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safeContainer}>
+        <View style={styles.container}>
+          <Text>Loading...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const htmlContent = cour && cour.resume ? mdParser.render(cour.resume) : mdParser.render("il n'y aucun cours");
 
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
         <View style={styles.header}>
           <BackArrow route={"/revise"} />
-          <Text>Pythagore</Text>
+          <Text>{cour.nom}</Text>
         </View>
         <View style={styles.header}>
           <TouchableOpacity
@@ -94,9 +71,9 @@ export default function SettingsPage() {
         </View>
 
         <View style={styles.content}>
-          {activeTab === "Entrainement" && (
+          {activeTab === "Entrainement" && cour && (
             <View style={styles.ResumeContainer}>
-                <Quiz data={testData} />
+              <Quiz data={cour} />
             </View>
           )}
           {activeTab === "Résumé" && (
@@ -168,4 +145,3 @@ const styles = StyleSheet.create({
     paddingBottom: 20 
   },
 });
-

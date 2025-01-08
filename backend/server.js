@@ -8,7 +8,6 @@ const app = express();
 const PORT = 3000;
 app.use(cors());
 
-// Configuration de multer pour le stockage des fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = './uploads';
@@ -18,16 +17,14 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Ajoute un timestamp pour éviter les conflits de noms
+    cb(null, Date.now() + path.extname(file.originalname)); 
   }
 });
 
 const upload = multer({ storage: storage });
 
-// Middleware pour servir les fichiers statiques
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Route pour uploader un fichier
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'Aucun fichier téléchargé' });
@@ -42,7 +39,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
   });
 });
 
-// Route pour récupérer la liste des fichiers
 app.get('/files', (req, res) => {
   const uploadDir = './uploads';
   fs.readdir(uploadDir, (err, files) => {
@@ -58,7 +54,6 @@ app.get('/files', (req, res) => {
   });
 });
 
-// Route pour télécharger un fichier spécifique
 app.get('/files/:filename', (req, res) => {
   const filepath = path.join(__dirname, 'uploads', req.params.filename);
   res.download(filepath, err => {
@@ -68,7 +63,6 @@ app.get('/files/:filename', (req, res) => {
   });
 });
 
-// Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
