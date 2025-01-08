@@ -30,6 +30,22 @@ export default function SettingsPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/'+testId);
+        const json = await response.json();
+        setCour(json);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [])
+
   const mdParser = new MarkdownIt().use(markdownItKatex);
   const markdown = `
   # Cours de Mathématiques - Introduction à l'Algèbre

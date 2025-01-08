@@ -5,24 +5,36 @@ import { useRouter } from "expo-router";
 import BackArrow from "@/components/ui/BackArrow"; 
 import ProfilePicture from "@/components/ui/ProfilePictures";
 import BtnSubmit from "@/components/ui/BtnSubmit";
-
+import * as SecureStore from 'expo-secure-store';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [pseudo, setPseudo] = useState('');
-  const [email, setEmail] = useState('');
-  const [motDePasse, setMotDePasse] = useState('');
+  const [formdata, setFormdata] = useState({
+    email: '',
+    motDePasse: '',
+    pseudo: '',
+  });
 
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
   
-  const handleSubmit = () => {
-    const formData = {
-      email,
-      motDePasse,
-      pseudo,
-    };
-
-    console.log("Données du formulaire : ", formData);
-
+  const handleSubmit = async () => {
+    try {
+      const userId = await getToken();
+      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/`, {
+        method: "PUT",
+        body: JSON.stringify({
+          email: formdata.email,
+          password: formdata.motDePasse,
+          pseudo: formdata.pseudo,
+        })
+      })
+      const json = await response.json();
+      console.log(json);
+    } catch(err) {
+      console.log("erreur serveur", err)
+    }
   };
 
   return (
@@ -42,23 +54,23 @@ export default function SettingsPage() {
           style={styles.input}
           placeholder="Nouveau mail"
           placeholderTextColor="#aaa"
-          value={email}
-          onChangeText={setEmail}
+          value={formdata.email}
+          onChangeText={(text) => setFormdata({ ...formdata, email: text })}
         />
         <TextInput
           style={styles.input}
           placeholder="Nouveau Mot de passe"
           secureTextEntry={true}
           placeholderTextColor="#aaa"
-          value={motDePasse}
-          onChangeText={setMotDePasse}
+          value={formdata.motDePasse}
+          onChangeText={(text) => setFormdata({ ...formdata, motDePasse: text })}
         />
         <TextInput
           style={styles.input}
           placeholder="Changez de pseudo"
           placeholderTextColor="#aaa"
-          value={pseudo}
-          onChangeText={setPseudo}
+          value={formdata.pseudo}
+          onChangeText={(text) => setFormdata({ ...formdata, pseudo: text })}
         />
         <BtnSubmit test={handleSubmit}/>
     </View>

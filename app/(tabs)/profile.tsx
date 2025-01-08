@@ -10,6 +10,30 @@ export default function SettingsPage() {
   const DeleteToken = async () => {
     return await SecureStore.deleteItemAsync('token');
   };
+  
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+
+  const DeleteAccount = async () => {
+    try {
+      const token = await getToken();
+      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${token}`, {
+        method: 'DELETE'
+      });
+      const json = await response.json();
+      if (json.message) {
+        await DeleteToken();
+        console.log("success");
+      } else {
+        console.log(json);
+        console.log("erreur lors de la suppression du commpte")
+      }
+    } catch (err) {
+      console.log("Erreur serveur : ", err);
+    }
+  }
 
   const handleLogout = () => {
     Alert.alert("Déconnexion",
@@ -35,7 +59,12 @@ export default function SettingsPage() {
       "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
       [
         { text: "Annuler", style: "cancel" },
-        { text: "Supprimer", style: "destructive", onPress: () => Alert.alert("Compte supprimé.") },
+        { text: "Supprimer", style: "destructive", onPress: async() => {
+          await DeleteAccount();
+          router.push('/login'); 
+        }
+        },
+
       ]
     );
   };

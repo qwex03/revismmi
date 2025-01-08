@@ -64,15 +64,26 @@ export default function PageWithTitle() {
         >
           {loading ? (
             <Text>Chargement...</Text>
-          ) : (
+          ) : filter.length > 0 ? (
             filter.map((matiere, index) => (
-              <MatiereItem key={index} text={matiere.nom} iconSource={matiere.url_icone} onPress={() => {
-                router.push({
-                  pathname: '/categorie',
-                  params: { catId: matiere.id },
-                });
-              }} />
+              <MatiereItem
+                key={index}
+                text={matiere.nom}
+                iconSource={matiere.url_icone}
+                onPress={() => {
+                  router.push({
+                    pathname: '/categorie',
+                    params: { catId: matiere.id },
+                  });
+                }}
+              />
             ))
+          ) : (
+            <View style={styles.noMatieres}>
+              <Text style={styles.noMatieresText}>
+                Vous n'avez pas encore de matières disponibles. Créez une nouvelle matière pour commencer !
+              </Text>
+            </View>
           )}
         </ScrollView>
       </View>
@@ -150,5 +161,18 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     transform: [{rotate: '180deg'}],
-  }
+  },
+  noMatieres: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+    padding: 16,
+    backgroundColor: '#F4F8FA',
+    borderRadius: 8,
+  },
+  noMatieresText: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+  },
 });

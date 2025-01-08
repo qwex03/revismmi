@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, SafeAreaView } from 'react-native';
+import { View, FlatList, SafeAreaView, Text } from 'react-native';
 import SearchBar from '@/components/ui/SearchBar';
 import SectionTitle from '@/components/ui/SectionTitle';
 import CourseCard from '@/components/ui/CoursCard';
@@ -24,7 +24,6 @@ const Dashboard = () => {
         const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/coursrecents`);
         const json = await response.json();
         setCourRecents(json);
-        console.log("Cours Recents :", coursRecents);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -48,22 +47,35 @@ const Dashboard = () => {
 
         <View style={styles.list}>
         <SectionTitle title="Vos dernières Liste de Cours" onSeeAll={() => {router.push("/revise")}} />
+        {coursRecents && coursRecents.length > 0 ? (
         <FlatList
           data={coursRecents}
           horizontal
-          renderItem={({ item }) => <CourseCard title={item.nom} creator={item.createur} date={formatDate(item.derniere_visite.date)} onPress={() => router.push({
-            pathname: '/test',
-            params: { testId: item.id },
-          })} />}
+          renderItem={({ item }) => (
+            <CourseCard
+              title={item.nom}
+              creator={item.createur}
+              date={formatDate(item.derniere_visite.date)}
+              onPress={() => router.push({
+                pathname: '/test',
+                params: { testId: item.id },
+              })}
+            />
+          )}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={[styles.horizontalList, styles.lastcours]}
         />
+      ) : (
+        <View style={styles.noCourses}>
+          <Text style={styles.noCoursesText}>Vous n'avez pas encore de cours récents.</Text>
+        </View>
+      )}
         <SectionTitle title="Vos dernières Réalisations" onSeeAll={() => {router.push("/revise")}} />
         <FlatList
           data={[
-            { title: '1er au quizz', icon: '🥇' },
-            { title: '1h d’apprentissage', icon: '⏳' },
-            { title: '3eme de la classe', icon: '🏆' },
+            { title: '1er au quizz', icon: String.fromCodePoint(0x1FAE0) },
+            { title: '1h d’apprentissage', icon: String.fromCodePoint(0x23F3) },
+            { title: '3eme de la classe', icon: String.fromCodePoint(0x1F3C6) },
           ]}
           horizontal
           renderItem={({ item }) => <AchievementCard title={item.title} icon={item.icon} />}
@@ -113,5 +125,19 @@ const styles =  StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 20,
-  }
+  },
+  noCourses: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100, 
+    backgroundColor: '#F5F5F5',
+    marginVertical: 10,
+    borderRadius: 8,
+    padding: 10,
+  },
+  noCoursesText: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+  },
 });
