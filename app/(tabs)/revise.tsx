@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
-import SearchBar from '@/components/ui/SearchBar';
-import MatiereItem from "@/components/ui/MatBtn";
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
+import MatiereItem from "@/components/ui/MatBtn";
+import SearchBar from "@/components/ui/SearchBar";
 
 export default function PageWithTitle() {
   const router = useRouter();
-  const [mat, setMat] = useState(null);
+  const [mat, setMat] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState([]);
@@ -16,7 +16,6 @@ export default function PageWithTitle() {
     return await SecureStore.getItemAsync('userToken');
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,8 +23,9 @@ export default function PageWithTitle() {
         const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories`);
         const json = await response.json();
         setMat(json);
-        setFilter(json);
+        setFilter(json); 
         setLoading(false);
+        console.log(filter);
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
@@ -41,30 +41,28 @@ export default function PageWithTitle() {
     } else {
       setFilter(
         mat.filter((matiere) => matiere.nom.toLowerCase().includes(search.toLowerCase()))
-      )
+      );
     }
   }, [search, mat]);
 
   return (
-    <SafeAreaView  style={styles.safeContainer}>
+    <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
-      <SearchBar
-      placeholder="Rechercher une matière"
-      value={search}
-      onChangeText={(text: string) => setSearch(text)}
-      />
+        <SearchBar
+          placeholder="Recherche dans les matières"
+          value={search}
+          onChangeText={(text: string) => setSearch(text)}
+        />
         <View style={styles.header}>
           <Text style={styles.title}>Vos matières</Text>
           <TouchableOpacity onPress={() => {router.push('/newcours')}} style={styles.button}>
             <Text style={styles.buttonText}>Nouveau dossier</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={styles.matieres}
-        contentContainerStyle={{ paddingBottom: 85 }}
-        >
+        <ScrollView style={styles.matieres} contentContainerStyle={{ paddingBottom: 85 }}>
           {loading ? (
             <Text>Chargement...</Text>
-          ) : filter.length > 0 ? (
+          ) : (
             filter.map((matiere, index) => (
               <MatiereItem
                 key={index}
@@ -78,12 +76,6 @@ export default function PageWithTitle() {
                 }}
               />
             ))
-          ) : (
-            <View style={styles.noMatieres}>
-              <Text style={styles.noMatieresText}>
-                Vous n'avez pas encore de matières disponibles. Créez une nouvelle matière pour commencer !
-              </Text>
-            </View>
           )}
         </ScrollView>
       </View>
@@ -130,49 +122,5 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     marginBottom: 20,
-  },
-  matiere: {
-    width: "100%",
-    height: 96,
-    borderRadius: 20,
-    backgroundColor: "#F4F8FA",
-    marginBottom: 15,
-    display: "flex",
-    flexDirection: "row", 
-    alignItems: "center", 
-    justifyContent: "space-between", 
-    paddingHorizontal: 16, 
-  },
-  leftSection: {
-    flexDirection: "row", 
-    alignItems: "center",
-  },
-  matiereText: {
-    marginLeft: 10, 
-    fontSize: 18,
-    fontWeight: "bold",
-    color: '#333',
-  },
-  icones: {
-    width: 54,
-    height: 54
-  }, 
-  arrow : {
-    width: 54,
-    height: 54,
-    transform: [{rotate: '180deg'}],
-  },
-  noMatieres: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-    padding: 16,
-    backgroundColor: '#F4F8FA',
-    borderRadius: 8,
-  },
-  noMatieresText: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
   },
 });
