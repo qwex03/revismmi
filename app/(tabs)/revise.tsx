@@ -22,18 +22,22 @@ export default function PageWithTitle() {
         const userId = await getToken();
         const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories`);
         const json = await response.json();
-        setMat(json);
-        setFilter(json); 
-        setLoading(false);
-        console.log(filter);
+        if (Array.isArray(json)) {
+          setMat(json);
+          setFilter(json);
+        } else {
+          setFilter([]);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Erreur lors de la récupération des données:', error);
+      } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
     if (search === '') {
@@ -62,6 +66,8 @@ export default function PageWithTitle() {
         <ScrollView style={styles.matieres} contentContainerStyle={{ paddingBottom: 85 }}>
           {loading ? (
             <Text>Chargement...</Text>
+          ) : filter.length == 0 ? (
+            <Text style={styles.emptyText}>Aucune matière disponible.</Text>
           ) : (
             filter.map((matiere, index) => (
               <MatiereItem
@@ -122,5 +128,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     marginBottom: 20,
+  },
+  emptyText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#888',
+    marginTop: 20,
   },
 });

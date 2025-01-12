@@ -22,7 +22,8 @@ export default function SettingsPage() {
   const handleSubmit = async () => {
     try {
       const userId = await getToken();
-      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/`, {
+      console.log(userId);
+      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}`, {
         method: "PUT",
         body: JSON.stringify({
           email: formdata.email,

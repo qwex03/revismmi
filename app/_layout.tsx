@@ -41,6 +41,7 @@ export default function RootLayout() {
           <Stack.Screen name="upload" options={{ headerShown: false }} />
           <Stack.Screen name="condition" options={{ headerShown: false }} />
           <Stack.Screen name="categorie" options={{ headerShown: false }} />
+          <Stack.Screen name="photo" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />

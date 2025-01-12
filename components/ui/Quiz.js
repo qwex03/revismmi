@@ -34,7 +34,7 @@ const Quiz = ({ data }) => {
         goToNextCard();
       } else if (attemptsLeft > 1) {
         setAttemptsLeft(attemptsLeft - 1);
-        setSelectedAnswers([]); // Reset selected answers for retry
+        setSelectedAnswers([]);
       } else {
         goToNextCard();
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import SearchBar from '@/components/ui/SearchBar';
 import MatiereItem from "@/components/ui/MatBtn";
 import { useLocalSearchParams } from 'expo-router';
@@ -24,12 +24,19 @@ export default function CategoriePage() {
         const userId = await getToken();
         const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories/${catId}/cours`);
         const json = await response.json();
-        setCour(json);
-        setFilter(json);
+        if (Array.isArray(json)) {
+          setCour(json);
+          setFilter(json);
+        } else {
+          setCour([]);
+          setFilter([]);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
+        setCour([]);
+        setFilter([]);
       }
     };
 
@@ -42,38 +49,43 @@ export default function CategoriePage() {
     } else {
       setFilter(
         cour.filter((cour) => cour.nom.toLowerCase().includes(search.toLowerCase()))
-      )
+      );
     }
   }, [search, cour]);
 
   return (
-    <SafeAreaView  style={styles.safeContainer}>
+    <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
-      <SearchBar 
-      placeholder="Rechercher un cours"
-      value={search}
-      onChangeText={(text: string) => setSearch(text)}
-      />
+        <SearchBar 
+          placeholder="Rechercher un cours"
+          value={search}
+          onChangeText={(text) => setSearch(text)}
+        />
         <View style={styles.header}>
           <Text style={styles.title}>Vos cours</Text>
-          <TouchableOpacity onPress={() => {router.push('/newcours')}} style={styles.button}>
+          <TouchableOpacity onPress={() => router.push('/newcours')} style={styles.button}>
             <Text style={styles.buttonText}>Nouveau dossier</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={styles.matieres}
-        contentContainerStyle={{ paddingBottom: 85 }}
-        >
+        <ScrollView style={styles.matieres} contentContainerStyle={{ paddingBottom: 85 }}>
           {loading ? (
             <Text>Chargement...</Text>
+          ) : filter.length == 0 ? (
+            <Text style={styles.emptyMessage}>Aucun cours disponible.</Text>
           ) : (
             filter.map((cour, index) => (
-              <MatiereItem key={index} text={cour.nom} iconSource={cour.nom} onPress={() => {
-                console.log(cour.id);
-                router.push({
-                  pathname: '/test',
-                  params: { testId: cour.id },
-                });
-              }} />
+              <MatiereItem
+                key={index}
+                text={cour.nom}
+                iconSource={cour.nom}
+                onPress={() => {
+                  console.log(cour.id);
+                  router.push({
+                    pathname: '/test',
+                    params: { testId: cour.id },
+                  });
+                }}
+              />
             ))
           )}
         </ScrollView>
@@ -83,75 +95,51 @@ export default function CategoriePage() {
 }
 
 const styles = StyleSheet.create({
-    safeContainer: {
-      flex: 1,
-      backgroundColor: "black",
-      paddingTop: "12%",
-    },
-    container: {
-      flex: 1,
-      backgroundColor: '#E5F0FB',
-      padding: 16,
-    },
-    header: {
-      flexDirection: 'row', 
-      width: '100%', 
-      justifyContent: 'space-between', 
-      alignItems: 'center', 
-      paddingHorizontal: 16, 
-      paddingVertical: 8,
-      marginBottom: 20,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: '#333',
-    },
-    button: {
-      padding: 10,
-      backgroundColor: "#0B93FD",
-      borderRadius: 20
-    },
-    buttonText: {
-      fontSize: 16,
-      color: 'white',
-    },
-    matieres: {
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      marginBottom: 20,
-    },
-    matiere: {
-      width: "100%",
-      height: 96,
-      borderRadius: 20,
-      backgroundColor: "#F4F8FA",
-      marginBottom: 15,
-      display: "flex",
-      flexDirection: "row", 
-      alignItems: "center", 
-      justifyContent: "space-between", 
-      paddingHorizontal: 16, 
-    },
-    leftSection: {
-      flexDirection: "row", 
-      alignItems: "center",
-    },
-    matiereText: {
-      marginLeft: 10, 
-      fontSize: 18,
-      fontWeight: "bold",
-      color: '#333',
-    },
-    icones: {
-      width: 54,
-      height: 54
-    }, 
-    arrow : {
-      width: 54,
-      height: 54,
-      transform: [{rotate: '180deg'}],
-    }
-  });
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    paddingTop: "12%",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#E5F0FB',
+    padding: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  button: {
+    padding: 10,
+    backgroundColor: "#0B93FD",
+    borderRadius: 20,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'white',
+  },
+  matieres: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: 20,
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#555',
+    marginTop: 20,
+  },
+});
+
   
