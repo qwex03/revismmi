@@ -11,6 +11,7 @@ const Dashboard = () => {
   const router = useRouter();
   const [coursRecents, setCoursRecents] = useState(null);
   const [badgesRecents, setBadgesRecents] = useState(null);
+  const [pseudo, setPseudo] = useState('');
 
   const getToken = async () => {
     return await SecureStore.getItemAsync('userToken');
@@ -43,6 +44,23 @@ const Dashboard = () => {
     fetchBadgesRecents();
   }, []);
 
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const userId = await getToken();
+            const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}`);
+            const json = await response.json();
+            setPseudo(json.pseudo)
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
   const formatDate = (dateStr) => {
     const dateObj = new Date(dateStr);
     const year = dateObj.getFullYear();
@@ -56,7 +74,7 @@ const Dashboard = () => {
       <View style={styles.container}>
         <SearchBar />
 
-        <Text style={styles.HelloText}>Bonjour 👋 !</Text>
+        <Text style={styles.HelloText}>Bonjour {pseudo} 👋 !</Text>
         <View style={styles.list}>
           <SectionTitle title="Vos Derniers Cours" onSeeAll={() => { router.push("/revise") }} />
           {coursRecents && coursRecents.length > 0 ? (
@@ -158,5 +176,6 @@ const styles = StyleSheet.create({
     textShadowColor: '#B0C4DE',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
+    marginBottom: 20
   },
 });
