@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 const Quiz = ({ data }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -8,6 +9,29 @@ const Quiz = ({ data }) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFlashcardAnswer, setShowFlashcardAnswer] = useState(false);
   const [attemptsLeft, setAttemptsLeft] = useState(0);
+
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+  const UpdateMaitrise = async (IdCarte, Result) => {
+    try {
+      const userId = await getToken();
+      const response = await fetch('https://sae501.mateovallee.fr/maitrise',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+          id_user: userId,
+          id_carte: IdCarte,
+          reussie: Result
+          }),
+        },
+      )
+      const json = await response.json();
+    } catch(error) {
+      console.error('Erreur update maitrise : ', error)
+    }
+  }
 
   const currentCard = data.cartes[currentCardIndex];
 
@@ -19,7 +43,7 @@ const Quiz = ({ data }) => {
     }
   };
 
-  const validateAnswers = () => {
+  const validateAnswers = async () => {
     if (currentCard.type === "qcm") {
       const correctAnswers = currentCard.reponses
         .map((item, index) => (item.correcte ? index : null))
@@ -30,12 +54,14 @@ const Quiz = ({ data }) => {
         correctAnswers.every((index) => selectedAnswers.includes(index));
 
       if (isCorrect) {
+        await UpdateMaitrise(currentCard.id, true);
         setScore(score + 1);
         goToNextCard();
       } else if (attemptsLeft > 1) {
         setAttemptsLeft(attemptsLeft - 1);
         setSelectedAnswers([]);
       } else {
+        await UpdateMaitrise(currentCard.id, false);
         goToNextCard();
       }
     }

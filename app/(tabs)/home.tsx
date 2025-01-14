@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, SafeAreaView, Text } from 'react-native';
+import { View, FlatList, SafeAreaView, Text, StyleSheet } from 'react-native';
 import SearchBar from '@/components/ui/SearchBar';
 import SectionTitle from '@/components/ui/SectionTitle';
 import CourseCard from '@/components/ui/CoursCard';
 import AchievementCard from '@/components/ui/AchievementCard';
-import { StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 
@@ -21,7 +20,7 @@ const Dashboard = () => {
     const fetchCoursRecents = async () => {
       try {
         const userId = await getToken();
-        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/coursrecents`);
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/coursrecents`);
         const json = await response.json();
         setCoursRecents(json);
       } catch (error) {
@@ -32,7 +31,7 @@ const Dashboard = () => {
     const fetchBadgesRecents = async () => {
       try {
         const userId = await getToken();
-        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/badgesrecents`);
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/badgesrecents`);
         const json = await response.json();
         setBadgesRecents(json);
       } catch (error) {
@@ -57,8 +56,9 @@ const Dashboard = () => {
       <View style={styles.container}>
         <SearchBar />
 
+        <Text style={styles.HelloText}>Bonjour 👋 !</Text>
         <View style={styles.list}>
-          <SectionTitle title="Vos Derniers Cours" onSeeAll={() => {router.push("/revise")}} />
+          <SectionTitle title="Vos Derniers Cours" onSeeAll={() => { router.push("/revise") }} />
           {coursRecents && coursRecents.length > 0 ? (
             <FlatList
               data={coursRecents}
@@ -78,12 +78,12 @@ const Dashboard = () => {
               contentContainerStyle={[styles.horizontalList, styles.lastcours]}
             />
           ) : (
-            <View style={styles.noCourses}>
-              <Text style={styles.noCoursesText}>Vous n'avez pas encore de cours récents.</Text>
+            <View style={styles.noContent}>
+              <Text style={styles.noContentText}>Vous n'avez pas encore de cours récents.</Text>
             </View>
           )}
 
-          <SectionTitle title="Vos Badges Récents" onSeeAll={() => {router.push("/profile")}} />
+          <SectionTitle title="Vos Badges Récents" onSeeAll={() => { router.push("/profile") }} />
           {badgesRecents && badgesRecents.length > 0 ? (
             <FlatList
               data={badgesRecents}
@@ -91,15 +91,15 @@ const Dashboard = () => {
               renderItem={({ item }) => (
                 <AchievementCard
                   title={item.nom}
-                  icon={item.icone}
+                  icon={item.image}
                 />
               )}
               keyExtractor={(item, index) => index.toString()}
               contentContainerStyle={[styles.horizontalList, styles.achievement]}
             />
           ) : (
-            <View style={styles.noAchievements}>
-              <Text style={styles.noAchievementsText}>Vous n'avez pas encore de badges récents.</Text>
+            <View style={styles.noContent}>
+              <Text style={styles.noContentText}>Vous n'avez pas encore de badges récents.</Text>
             </View>
           )}
         </View>
@@ -113,61 +113,50 @@ export default Dashboard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E5F0FB',
+    backgroundColor: '#F2F7FB',
     padding: 16,
   },
   horizontalList: {
-    margin: 0,
+    marginHorizontal: 0,
   },
   achievement: {
-    backgroundColor: 'white', 
-    height: 100, 
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
+    marginVertical: 10,
   },
   safeContainer: {
     flex: 1,
-    backgroundColor: "black",
-    paddingTop: "12%",
+    backgroundColor: 'black',
+    paddingTop: '12%',
   },
   lastcours: {
-    height: 150,
-    marginBottom: 5,
+    marginVertical: 10,
   },
   list: {
-    display: "flex",
-    flexDirection: "column",
+    flexDirection: 'column',
     gap: 20,
   },
-  noCourses: {
+  noContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 100, 
-    backgroundColor: '#F5F5F5',
+    height: 120,
+    backgroundColor: '#F8FAFD',
     marginVertical: 10,
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 10,
+    borderWidth: 1,
+    borderColor: '#E0E7ED',
   },
-  noCoursesText: {
+  noContentText: {
     fontSize: 16,
-    color: '#555',
+    color: '#6C757D',
     textAlign: 'center',
   },
-  noAchievements: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 100, 
-    backgroundColor: '#F5F5F5',
-    marginVertical: 10,
-    borderRadius: 8,
-    padding: 10,
-  },
-  noAchievementsText: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
+  HelloText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#343A40',
+    textAlign: 'left',
+    textShadowColor: '#B0C4DE',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });

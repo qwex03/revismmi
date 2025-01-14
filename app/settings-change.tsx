@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, SafeAreaView } from "react-native";
 import { useState } from 'react';
 import { useRouter } from "expo-router";
 import BackArrow from "@/components/ui/BackArrow"; 
@@ -23,7 +23,7 @@ export default function SettingsPage() {
     try {
       const userId = await getToken();
       console.log(userId);
-      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}`, {
+      const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}`, {
         method: "PUT",
         body: JSON.stringify({
           email: formdata.email,
@@ -39,46 +39,52 @@ export default function SettingsPage() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pseudo</Text>
+    <SafeAreaView style={styles.safeContainer}>
+      <View style={styles.container}>
 
-      <ProfilePicture />
+        <ProfilePicture />
 
-      <View style={styles.header}>
-        <BackArrow route={"/profile"} />
-        <Text style={styles.title}>Paramètres</Text>
+        <View style={styles.header}>
+          <BackArrow route={"/profile"} />
+          <Text>Paramètres</Text>
+        </View>
+
+        <Text style={styles.section}>Informations personnelles</Text>
+
+        <TextInput
+            style={styles.input}
+            placeholder="Nouveau mail"
+            placeholderTextColor="#aaa"
+            value={formdata.email}
+            onChangeText={(text) => setFormdata({ ...formdata, email: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nouveau Mot de passe"
+            secureTextEntry={true}
+            placeholderTextColor="#aaa"
+            value={formdata.motDePasse}
+            onChangeText={(text) => setFormdata({ ...formdata, motDePasse: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Changez de pseudo"
+            placeholderTextColor="#aaa"
+            value={formdata.pseudo}
+            onChangeText={(text) => setFormdata({ ...formdata, pseudo: text })}
+          />
+          <BtnSubmit test={handleSubmit}/>
       </View>
-
-      <Text style={styles.section}>Informations personnelles</Text>
-
-      <TextInput
-          style={styles.input}
-          placeholder="Nouveau mail"
-          placeholderTextColor="#aaa"
-          value={formdata.email}
-          onChangeText={(text) => setFormdata({ ...formdata, email: text })}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Nouveau Mot de passe"
-          secureTextEntry={true}
-          placeholderTextColor="#aaa"
-          value={formdata.motDePasse}
-          onChangeText={(text) => setFormdata({ ...formdata, motDePasse: text })}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Changez de pseudo"
-          placeholderTextColor="#aaa"
-          value={formdata.pseudo}
-          onChangeText={(text) => setFormdata({ ...formdata, pseudo: text })}
-        />
-        <BtnSubmit test={handleSubmit}/>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    paddingTop: "12%",
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -101,12 +107,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: "center",
     width: "80%"
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginVertical: 20,
-    color: "#333",
   },
   profileCircle: {
     width: 100,

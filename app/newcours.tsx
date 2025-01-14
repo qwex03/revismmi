@@ -22,7 +22,7 @@ export default function SettingsPage() {
   const handleSubmit = async () => {
     try {
       const userId = await getToken();
-      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/categories`, {
+      const response = await fetch(`https://sae501.mateovallee.fr/public/categories`, {
         method: 'POST', 
         body: JSON.stringify({
             nom: formdata.nom,

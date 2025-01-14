@@ -19,7 +19,7 @@ export default function SettingsPage() {
   const DeleteAccount = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${token}`, {
+      const response = await fetch(`https://sae501.mateovallee.fr/users/${token}`, {
         method: 'DELETE'
       });
       const json = await response.json();
@@ -72,7 +72,6 @@ export default function SettingsPage() {
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Pseudo</Text>
 
         <ProfilePicture />
 
@@ -118,12 +117,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginVertical: 20,
-    color: "#333",
   },
   button: {
     width: "100%",

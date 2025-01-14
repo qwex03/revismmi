@@ -23,7 +23,11 @@ export default function SettingsPage() {
     const upDateLastVisite = async () => {
       try {
         const userId = await getToken();
-        const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users'+userId+'/cours'+testId)
+        const response = await fetch('https://sae501.mateovallee.fr/users/'+userId+'/cours/'+testId, {
+          method: 'PUT'
+        })
+        const json = await response.json();
+        console.log(json)
       } catch (error) {
         console.error('Error update data');
       }
@@ -36,7 +40,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/'+testId);
+        const response = await fetch('https://sae501.mateovallee.fr/cours/'+testId);
         const json = await response.json();
         setCour(json);
         setLoading(false);
@@ -49,21 +53,9 @@ export default function SettingsPage() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/'+testId);
-        const json = await response.json();
-        setCour(json);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      }
-    };
+  
+  
 
-    fetchData();
-  }, [])
 
   const mdParser = new MarkdownIt().use(markdownItKatex);
   const markdown = `

@@ -22,7 +22,7 @@ export default function CategoriePage() {
     const fetchData = async () => {
       try {
         const userId = await getToken();
-        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories/${catId}/cours`);
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/categories/${catId}/cours`);
         const json = await response.json();
         if (Array.isArray(json)) {
           setCour(json);
@@ -63,8 +63,8 @@ export default function CategoriePage() {
         />
         <View style={styles.header}>
           <Text style={styles.title}>Vos cours</Text>
-          <TouchableOpacity onPress={() => router.push('/newcours')} style={styles.button}>
-            <Text style={styles.buttonText}>Nouveau dossier</Text>
+          <TouchableOpacity onPress={() => router.push('/create')} style={styles.button}>
+            <Text style={styles.buttonText}>Nouveau Cours</Text>
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.matieres} contentContainerStyle={{ paddingBottom: 85 }}>

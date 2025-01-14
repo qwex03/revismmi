@@ -20,7 +20,7 @@ export default function PageWithTitle() {
     const fetchData = async () => {
       try {
         const userId = await getToken();
-        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories`);
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/categories`);
         const json = await response.json();
         if (Array.isArray(json)) {
           setMat(json);

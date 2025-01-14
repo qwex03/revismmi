@@ -25,7 +25,7 @@ const RegisterPage = () => {
 
   const handleRegister = async () => {
     try {
-    const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/inscription`, {
+    const response = await fetch(`https://sae501.mateovallee.fr/inscription`, {
       method: 'POST', 
       body: JSON.stringify({
           email: formdata.email,
