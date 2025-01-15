@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const AchievementCard = ({ title, icon }) => {
+const AchievementCard = ({ title, icon, onPress }) => {
   return (
-    <View style={styles.card}>
-      <Text style={styles.icon}>{String.fromCodePoint(icon)}</Text>
-      <Text style={styles.title}>{title}</Text>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.card}>
+        <Text style={styles.icon}>{String.fromCodePoint(icon)}</Text>
+        <Text style={styles.title}>{title}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

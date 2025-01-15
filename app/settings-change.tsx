@@ -22,7 +22,6 @@ export default function SettingsPage() {
   const handleSubmit = async () => {
     try {
       const userId = await getToken();
-      console.log(userId);
       const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}`, {
         method: "PUT",
         body: JSON.stringify({
@@ -32,7 +31,6 @@ export default function SettingsPage() {
         })
       })
       const json = await response.json();
-      console.log(json);
     } catch(err) {
       console.log("erreur serveur", err)
     }

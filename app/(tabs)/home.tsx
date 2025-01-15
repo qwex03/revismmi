@@ -77,7 +77,7 @@ const Dashboard = () => {
 
         <Text style={styles.HelloText}>Bonjour {pseudo} 👋 !</Text>
         <View style={styles.list}>
-          <SectionTitle title="Vos Derniers Cours" onSeeAll={() => { router.push("/revise") }} />
+          <SectionTitle title="Vos Derniers Cours 📚" onSeeAll={() => { router.push("/revise") }} />
           {coursRecents && coursRecents.length > 0 ? (
             <FlatList
               data={coursRecents}
@@ -102,7 +102,7 @@ const Dashboard = () => {
             </View>
           )}
 
-          <SectionTitle title="Vos Badges Récents" onSeeAll={() => { router.push("/profile") }} />
+          <SectionTitle title="Vos Badges Récents 🏆" onSeeAll={() => { router.push("/profile") }} />
           {badgesRecents && badgesRecents.length > 0 ? (
             <FlatList
               data={badgesRecents}

@@ -36,8 +36,10 @@ const LoginPage = () => {
     });
     const json = await response.json();
     if(json.error) {
+      console.log(json)
       setMessage("Erreur de connexion");
     } else {
+      console.log(json);
       await saveToken(json.id);
       router.push("/home");
     }

@@ -78,7 +78,7 @@ export default function SettingsPage() {
         <UserBadges/>
 
         <View>
-          <Text style={styles.title}>Paramètres</Text>
+          <Text style={styles.title}>Paramètres ⚙️</Text>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => { router.push('/settings-change') }}>
