@@ -6,6 +6,8 @@ import markdownItKatex from "markdown-it-katex";
 import BackArrow from "@/components/ui/BackArrow";
 import Quiz from "@/components/ui/Quiz";
 import { useLocalSearchParams } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Entrainement");
@@ -13,11 +15,32 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const { testId } = useLocalSearchParams();
 
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+  useEffect(() => {
+    const upDateLastVisite = async () => {
+      try {
+        const userId = await getToken();
+        const response = await fetch('https://sae501.mateovallee.fr/users/'+userId+'/cours/'+testId, {
+          method: 'PUT'
+        })
+        const json = await response.json();
+        console.log(json)
+      } catch (error) {
+        console.error('Error update data');
+      }
+    }
+
+    upDateLastVisite()
+  }, [])
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours/'+testId);
+        const response = await fetch('https://sae501.mateovallee.fr/cours/'+testId);
         const json = await response.json();
         setCour(json);
         setLoading(false);
@@ -29,6 +52,10 @@ export default function SettingsPage() {
 
     fetchData();
   }, []);
+
+  
+  
+
 
   const mdParser = new MarkdownIt().use(markdownItKatex);
   const markdown = `

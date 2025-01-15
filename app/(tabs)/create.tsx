@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
 import BtnHelp from "@/components/ui/BtnHelp";
@@ -58,16 +58,14 @@ export default function PageWithTitle() {
         <View style={styles.cours}>
           <TouchableOpacity style={styles.button} onPress={selectFile}>
             <Text style={styles.buttonText}>A partir d'un fichier</Text>
-            <Image source={require('@/assets/images/files.png')} style={{ width: 50, height: 50, alignSelf: 'center', marginTop: 10 }} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={()=> {console.log("test")}}>
-            <Text style={styles.buttonText}>Prendre une Photo</Text>
-            <Image source={require('@/assets/images/photo.png')} style={{ width: 50, height: 50, alignSelf: 'center', marginTop: 10 }} />
+            <Image source={require('@/assets/images/files.png')} style={styles.icon} />
           </TouchableOpacity>
         </View>
-        
 
-        <BtnHelp title={"Comment créer un cours ?"} text={"Un cours est un espace pour apprendre, réviser, et se tester. Pour créer un cours, sélectionnez la manière dont vous voulez ajouter le contenu au cours (photo, importation d’un document, saisie du contenu dans un editeur de texte). Ensuite choississez un dossier dans lequel sera enregistré votre cours. Ensuite, l’IA se chargera de transformer vos notes/cours en cours et en flashcards."} />
+        <BtnHelp 
+          title={"Comment créer un cours ?"} 
+          text={"Un cours est un espace pour apprendre, réviser, et se tester. Pour créer un cours, sélectionnez la manière dont vous voulez ajouter le contenu au cours (photo, importation d’un document). Ensuite, choisissez un dossier dans lequel sera enregistré votre cours. Ensuite, l’IA se chargera de transformer vos notes/cours en cours et en flashcards."} 
+        />
 
       </View>
     </SafeAreaView>
@@ -81,40 +79,50 @@ const styles = StyleSheet.create({
     paddingTop: "12%",
   },
   container: {
-    paddingTop: 50,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#CFDFEC',
+    backgroundColor: '#CFDFEC', 
+    paddingHorizontal: 20,
   },
   title: {
+    marginTop: 20,
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333', 
+    color: '#333',
+    marginBottom: 30,
   },
   cours: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between", 
-    flexWrap: "wrap",  
-    width: '100%',  
-    paddingHorizontal: 20,  
-  },
-  button : {
-    backgroundColor: "#F4F8FA",
-    height: 147,
-    width: '48%',  
-    padding: 10,
-    marginTop: 20,
-    borderRadius: 20,
-    marginBottom: 20,  
-  }, 
-  buttonText: {
-    color: "black",
-    textAlign: 'center',  
-  },
-  camera: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: 'center',
     width: '100%',
-    height: 400,
+    paddingVertical: 20,
+  },
+  button: {
+    backgroundColor: "#F4F8FA", 
+    height: 150,
+    width: '100%',
+    padding: 15,
+    marginBottom: 20,
+    borderRadius: 20,
+    shadowColor: "#000", 
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: "#333", 
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
   }
 });

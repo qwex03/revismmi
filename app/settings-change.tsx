@@ -1,71 +1,90 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, SafeAreaView } from "react-native";
 import { useState } from 'react';
 import { useRouter } from "expo-router";
 import BackArrow from "@/components/ui/BackArrow"; 
 import ProfilePicture from "@/components/ui/ProfilePictures";
 import BtnSubmit from "@/components/ui/BtnSubmit";
-
+import * as SecureStore from 'expo-secure-store';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const [pseudo, setPseudo] = useState('');
-  const [email, setEmail] = useState('');
-  const [motDePasse, setMotDePasse] = useState('');
+  const [formdata, setFormdata] = useState({
+    email: '',
+    motDePasse: '',
+    pseudo: '',
+  });
 
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
   
-  const handleSubmit = () => {
-    const formData = {
-      email,
-      motDePasse,
-      pseudo,
-    };
-
-    console.log("Données du formulaire : ", formData);
-
+  const handleSubmit = async () => {
+    try {
+      const userId = await getToken();
+      console.log(userId);
+      const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          email: formdata.email,
+          password: formdata.motDePasse,
+          pseudo: formdata.pseudo,
+        })
+      })
+      const json = await response.json();
+      console.log(json);
+    } catch(err) {
+      console.log("erreur serveur", err)
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pseudo</Text>
+    <SafeAreaView style={styles.safeContainer}>
+      <View style={styles.container}>
 
-      <ProfilePicture />
+        <ProfilePicture />
 
-      <View style={styles.header}>
-        <BackArrow route={"/profile"} />
-        <Text style={styles.title}>Paramètres</Text>
+        <View style={styles.header}>
+          <BackArrow route={"/profile"} />
+          <Text>Paramètres</Text>
+        </View>
+
+        <Text style={styles.section}>Informations personnelles</Text>
+
+        <TextInput
+            style={styles.input}
+            placeholder="Nouveau mail"
+            placeholderTextColor="#aaa"
+            value={formdata.email}
+            onChangeText={(text) => setFormdata({ ...formdata, email: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nouveau Mot de passe"
+            secureTextEntry={true}
+            placeholderTextColor="#aaa"
+            value={formdata.motDePasse}
+            onChangeText={(text) => setFormdata({ ...formdata, motDePasse: text })}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Changez de pseudo"
+            placeholderTextColor="#aaa"
+            value={formdata.pseudo}
+            onChangeText={(text) => setFormdata({ ...formdata, pseudo: text })}
+          />
+          <BtnSubmit test={handleSubmit}/>
       </View>
-
-      <Text style={styles.section}>Informations personnelles</Text>
-
-      <TextInput
-          style={styles.input}
-          placeholder="Nouveau mail"
-          placeholderTextColor="#aaa"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Nouveau Mot de passe"
-          secureTextEntry={true}
-          placeholderTextColor="#aaa"
-          value={motDePasse}
-          onChangeText={setMotDePasse}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Changez de pseudo"
-          placeholderTextColor="#aaa"
-          value={pseudo}
-          onChangeText={setPseudo}
-        />
-        <BtnSubmit test={handleSubmit}/>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    paddingTop: "12%",
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -88,12 +107,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: "center",
     width: "80%"
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginVertical: 20,
-    color: "#333",
   },
   profileCircle: {
     width: 100,

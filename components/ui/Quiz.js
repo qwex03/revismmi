@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 const Quiz = ({ data }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -7,6 +8,31 @@ const Quiz = ({ data }) => {
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFlashcardAnswer, setShowFlashcardAnswer] = useState(false);
+  const [attemptsLeft, setAttemptsLeft] = useState(0);
+
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
+
+  const UpdateMaitrise = async (IdCarte, Result) => {
+    try {
+      const userId = await getToken();
+      const response = await fetch('https://sae501.mateovallee.fr/maitrise',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+          id_user: userId,
+          id_carte: IdCarte,
+          reussie: Result
+          }),
+        },
+      )
+      const json = await response.json();
+    } catch(error) {
+      console.error('Erreur update maitrise : ', error)
+    }
+  }
+
   const currentCard = data.cartes[currentCardIndex];
 
   const handleSelectAnswer = (index) => {
@@ -17,8 +43,8 @@ const Quiz = ({ data }) => {
     }
   };
 
-  const validateAnswers = () => {
-    if (currentCard.type === "qcm") {  
+  const validateAnswers = async () => {
+    if (currentCard.type === "qcm") {
       const correctAnswers = currentCard.reponses
         .map((item, index) => (item.correcte ? index : null))
         .filter((index) => index !== null);
@@ -28,7 +54,15 @@ const Quiz = ({ data }) => {
         correctAnswers.every((index) => selectedAnswers.includes(index));
 
       if (isCorrect) {
+        await UpdateMaitrise(currentCard.id, true);
         setScore(score + 1);
+        goToNextCard();
+      } else if (attemptsLeft > 1) {
+        setAttemptsLeft(attemptsLeft - 1);
+        setSelectedAnswers([]);
+      } else {
+        await UpdateMaitrise(currentCard.id, false);
+        goToNextCard();
       }
     }
   };
@@ -36,8 +70,9 @@ const Quiz = ({ data }) => {
   const goToNextCard = () => {
     if (currentCardIndex + 1 < data.cartes.length) {
       setCurrentCardIndex(currentCardIndex + 1);
-      setSelectedAnswers([]); 
+      setSelectedAnswers([]);
       setShowFlashcardAnswer(false);
+      setAttemptsLeft(currentCard.type === "qcm" && currentCard.reponses.length >= 4 ? 2 : 1);
     } else {
       setShowScore(true);
     }
@@ -49,6 +84,7 @@ const Quiz = ({ data }) => {
     setShowScore(false);
     setSelectedAnswers([]);
     setShowFlashcardAnswer(false);
+    setAttemptsLeft(0);
   };
 
   return (
@@ -56,7 +92,7 @@ const Quiz = ({ data }) => {
       {showScore ? (
         <View style={styles.scoreContainer}>
           <Text style={styles.scoreText}>
-            Quiz terminé ! Vous avez obtenu {score} / {data.cartes.length}.
+            Quiz terminé ! Vous avez obtenu {score} / {data.cartes.filter((c) => c.type === "qcm").length}.
           </Text>
           <TouchableOpacity style={styles.button} onPress={resetQuiz}>
             <Text style={styles.buttonText}>Recommencer</Text>
@@ -65,18 +101,17 @@ const Quiz = ({ data }) => {
       ) : (
         currentCard && (
           <View style={styles.cardContainer}>
-            <Text style={styles.questionText}>{currentCard.question}</Text>
+            <Text style={styles.questionText}>
+              {currentCard.question}
+              {currentCard.type === "qcm" && currentCard.reponses.filter((r) => r.correcte).length > 1 ? " (choix multiples)" : ""}
+            </Text>
 
             {currentCard.type === "flashcard" ? (
               <View>
                 {showFlashcardAnswer ? (
-                  <Text style={styles.flashcardAnswer}>
-                    {currentCard.reponses.reponse}
-                  </Text>
+                  <Text style={styles.flashcardAnswer}>{currentCard.reponses.reponse}</Text>
                 ) : (
-                  <Text style={styles.flashcardAnswer}>
-                    Cliquez pour révéler la réponse
-                  </Text>
+                  <Text style={styles.flashcardAnswer}>Cliquez pour révéler la réponse</Text>
                 )}
                 <TouchableOpacity
                   style={styles.button}
@@ -87,7 +122,6 @@ const Quiz = ({ data }) => {
                   </Text>
                 </TouchableOpacity>
 
-                {/* Afficher le bouton Suivant uniquement après avoir vu la réponse */}
                 {showFlashcardAnswer && (
                   <TouchableOpacity style={styles.button} onPress={goToNextCard}>
                     <Text style={styles.buttonText}>Suivant</Text>
@@ -115,13 +149,6 @@ const Quiz = ({ data }) => {
             {currentCard.type === "qcm" && (
               <TouchableOpacity style={styles.button} onPress={validateAnswers}>
                 <Text style={styles.buttonText}>Valider</Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Afficher le bouton Suivant pour les QCM uniquement après validation des réponses */}
-            {currentCard.type === "qcm" && selectedAnswers.length > 0 && (
-              <TouchableOpacity style={styles.button} onPress={goToNextCard}>
-                <Text style={styles.buttonText}>Suivant</Text>
               </TouchableOpacity>
             )}
           </View>

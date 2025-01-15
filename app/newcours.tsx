@@ -4,21 +4,42 @@ import { useState } from 'react';
 import { useRouter } from "expo-router";
 import BackArrow from "@/components/ui/BackArrow"; 
 import BtnSubmit from "@/components/ui/BtnSubmit";
+import * as SecureStore from 'expo-secure-store';
 
 
 export default function SettingsPage() {
   const router = useRouter();
   const [nom, setNom] = useState('');
+  const [formdata, setFormdata] = useState({
+    icone: '',
+    nom: '',
+  });
+
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
   
-
-  
-  const handleSubmit = () => {
-    const formData = {
-      nom,
-    };
-
-    console.log("Données du formulaire : ", formData);
-
+  const handleSubmit = async () => {
+    try {
+      const userId = await getToken();
+      const response = await fetch(`https://sae501.mateovallee.fr/public/categories`, {
+        method: 'POST', 
+        body: JSON.stringify({
+            nom: formdata.nom,
+            id_user: userId,
+            id_icone: Number(formdata.icone)
+        })
+      });
+      const json = await response.json();
+      if(json.error) {
+        console.log(json)
+      } else {
+        console.log(json)
+        router.push('/revise')
+      }
+    } catch (err) {
+      console.error('Error register in:', err);
+    }
   };
 
   return (
@@ -35,8 +56,16 @@ export default function SettingsPage() {
           style={styles.input}
           placeholder="Nouveau nom du dossier"
           placeholderTextColor="#aaa"
-          value={nom}
-          onChangeText={setNom}
+          value={formdata.nom}
+          onChangeText={(text) => setFormdata({ ...formdata, nom: text })}
+        />
+
+      <TextInput
+          style={styles.input}
+          placeholder="Icone du dossier"
+          placeholderTextColor="#aaa"
+          value={formdata.icone}
+          onChangeText={(text) => setFormdata({ ...formdata, icone: text })}
         />
         <BtnSubmit test={handleSubmit}/>
     </View>

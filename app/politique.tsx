@@ -3,32 +3,19 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-nati
 import BackArrow from "@/components/ui/BackArrow";
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
+import { useLocalSearchParams } from 'expo-router';
 
 const PolitiquePage = () => {
   const router = useRouter();
-  const [hasToken, SetHasToken] = useState(false);
+  const { first } = useLocalSearchParams();
 
-  const getToken = async () => {
-    return await SecureStore.getItemAsync('userToken');
-  };
-
-  useEffect(() => {
-    const token = async () => {
-      const token = await getToken();
-      if(token) {
-        SetHasToken(true);
-      }
-    }
-
-    token();
-    }, []);
-
-
-    return(
+  return(
         <View style={styles.container}>
             
             <View style={styles.header}>
-              <BackArrow color="white" route={"/profile"} />
+              {first !== "true" && (
+                <BackArrow color="white" route={"/profile"} />
+              )}
               <Text style={styles.title}>Politique de confidentialité</Text>
             </View>
             
@@ -138,11 +125,9 @@ const PolitiquePage = () => {
                     </Text>
                 </ScrollView>
             </View>
-            {!hasToken && (
             <TouchableOpacity onPress={() => {router.push("/home")}} style={styles.button}>
               <Text style={styles.buttonText}>J'accepte</Text>
             </TouchableOpacity>
-            )}
         </View>
     )
 

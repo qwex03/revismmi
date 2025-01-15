@@ -1,78 +1,126 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, SafeAreaView } from 'react-native';
+import { View, FlatList, SafeAreaView, Text, StyleSheet } from 'react-native';
 import SearchBar from '@/components/ui/SearchBar';
 import SectionTitle from '@/components/ui/SectionTitle';
 import CourseCard from '@/components/ui/CoursCard';
 import AchievementCard from '@/components/ui/AchievementCard';
-import { StyleSheet } from 'react-native';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 
 const Dashboard = () => {
   const router = useRouter();
-  const [coursRecents, setCourRecents] = useState(null);
+  const [coursRecents, setCoursRecents] = useState(null);
+  const [badgesRecents, setBadgesRecents] = useState(null);
+  const [pseudo, setPseudo] = useState('');
 
   const getToken = async () => {
     return await SecureStore.getItemAsync('userToken');
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCoursRecents = async () => {
       try {
         const userId = await getToken();
-        console.log(userId);
-        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/coursrecents`);
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/coursrecents`);
         const json = await response.json();
-        setCourRecents(json);
-        console.log("Cours Recents :", coursRecents);
+        setCoursRecents(json);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching cours recents:', error);
       }
     };
 
-    fetchData();
+    const fetchBadgesRecents = async () => {
+      try {
+        const userId = await getToken();
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/badgesrecents`);
+        const json = await response.json();
+        setBadgesRecents(json);
+      } catch (error) {
+        console.error('Error fetching badges recents:', error);
+      }
+    };
+
+    fetchCoursRecents();
+    fetchBadgesRecents();
   }, []);
 
-  const formatDate = (dateStr: string) => {
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const userId = await getToken();
+            const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}`);
+            const json = await response.json();
+            setPseudo(json.pseudo)
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
+  const formatDate = (dateStr) => {
     const dateObj = new Date(dateStr);
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const day = String(dateObj.getDate()).padStart(2, '0');
     return `${day}/${month}/${year}`;
-  }
+  };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
         <SearchBar />
 
+        <Text style={styles.HelloText}>Bonjour {pseudo} 👋 !</Text>
         <View style={styles.list}>
-        <SectionTitle title="Vos dernières Liste de Cours" onSeeAll={() => {router.push("/revise")}} />
-        <FlatList
-          data={coursRecents}
-          horizontal
-          renderItem={({ item }) => <CourseCard title={item.nom} creator={item.createur} date={formatDate(item.derniere_visite.date)} onPress={() => router.push({
-            pathname: '/test',
-            params: { testId: item.id },
-          })} />}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={[styles.horizontalList, styles.lastcours]}
-        />
-        <SectionTitle title="Vos dernières Réalisations" onSeeAll={() => {router.push("/revise")}} />
-        <FlatList
-          data={[
-            { title: '1er au quizz', icon: '🥇' },
-            { title: '1h d’apprentissage', icon: '⏳' },
-            { title: '3eme de la classe', icon: '🏆' },
-          ]}
-          horizontal
-          renderItem={({ item }) => <AchievementCard title={item.title} icon={item.icon} />}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={[styles.horizontalList, styles.achievement]}
-        />
+          <SectionTitle title="Vos Derniers Cours" onSeeAll={() => { router.push("/revise") }} />
+          {coursRecents && coursRecents.length > 0 ? (
+            <FlatList
+              data={coursRecents}
+              horizontal
+              renderItem={({ item }) => (
+                <CourseCard
+                  title={item.nom}
+                  creator={item.createur}
+                  date={formatDate(item.derniere_visite.date)}
+                  onPress={() => router.push({
+                    pathname: '/test',
+                    params: { testId: item.id },
+                  })}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={[styles.horizontalList, styles.lastcours]}
+            />
+          ) : (
+            <View style={styles.noContent}>
+              <Text style={styles.noContentText}>Vous n'avez pas encore de cours récents.</Text>
+            </View>
+          )}
 
+          <SectionTitle title="Vos Badges Récents" onSeeAll={() => { router.push("/profile") }} />
+          {badgesRecents && badgesRecents.length > 0 ? (
+            <FlatList
+              data={badgesRecents}
+              horizontal
+              renderItem={({ item }) => (
+                <AchievementCard
+                  title={item.nom}
+                  icon={item.image}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={[styles.horizontalList, styles.achievement]}
+            />
+          ) : (
+            <View style={styles.noContent}>
+              <Text style={styles.noContentText}>Vous n'avez pas encore de badges récents.</Text>
+            </View>
+          )}
         </View>
-        
       </View>
     </SafeAreaView>
   );
@@ -80,38 +128,54 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-
-const styles =  StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E5F0FB',
+    backgroundColor: '#F2F7FB',
     padding: 16,
-
   },
   horizontalList: {
-    margin: 0,
+    marginHorizontal: 0,
   },
   achievement: {
-    backgroundColor: 'white', 
-    height: 100, 
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10,
+    marginVertical: 10,
   },
   safeContainer: {
     flex: 1,
-    backgroundColor: "black",
-    paddingTop: "12%",
+    backgroundColor: 'black',
+    paddingTop: '12%',
   },
   lastcours: {
-    height: 150,
-    marginBottom: 5,
+    marginVertical: 10,
   },
   list: {
-    display: "flex",
-    flexDirection: "column",
+    flexDirection: 'column',
     gap: 20,
-  }
+  },
+  noContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 120,
+    backgroundColor: '#F8FAFD',
+    marginVertical: 10,
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#E0E7ED',
+  },
+  noContentText: {
+    fontSize: 16,
+    color: '#6C757D',
+    textAlign: 'center',
+  },
+  HelloText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#343A40',
+    textAlign: 'left',
+    textShadowColor: '#B0C4DE',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+    marginBottom: 20
+  },
 });

@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
-import SearchBar from '@/components/ui/SearchBar';
-import MatiereItem from "@/components/ui/MatBtn";
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
+import MatiereItem from "@/components/ui/MatBtn";
+import SearchBar from "@/components/ui/SearchBar";
 
 export default function PageWithTitle() {
   const router = useRouter();
-  const [mat, setMat] = useState(null);
+  const [mat, setMat] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState([]);
@@ -16,24 +16,28 @@ export default function PageWithTitle() {
     return await SecureStore.getItemAsync('userToken');
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userId = await getToken();
-        const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/users/${userId}/categories`);
+        const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/categories`);
         const json = await response.json();
-        setMat(json);
-        setFilter(json);
-        setLoading(false);
+        if (Array.isArray(json)) {
+          setMat(json);
+          setFilter(json);
+        } else {
+          setFilter([]);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Erreur lors de la récupération des données:', error);
+      } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
     if (search === '') {
@@ -41,37 +45,42 @@ export default function PageWithTitle() {
     } else {
       setFilter(
         mat.filter((matiere) => matiere.nom.toLowerCase().includes(search.toLowerCase()))
-      )
+      );
     }
   }, [search, mat]);
 
   return (
-    <SafeAreaView  style={styles.safeContainer}>
+    <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
-      <SearchBar
-      placeholder="Rechercher une matière"
-      value={search}
-      onChangeText={(text: string) => setSearch(text)}
-      />
+        <SearchBar
+          placeholder="Recherche dans les matières"
+          value={search}
+          onChangeText={(text: string) => setSearch(text)}
+        />
         <View style={styles.header}>
           <Text style={styles.title}>Vos matières</Text>
           <TouchableOpacity onPress={() => {router.push('/newcours')}} style={styles.button}>
             <Text style={styles.buttonText}>Nouveau dossier</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={styles.matieres}
-        contentContainerStyle={{ paddingBottom: 85 }}
-        >
+        <ScrollView style={styles.matieres} contentContainerStyle={{ paddingBottom: 85 }}>
           {loading ? (
             <Text>Chargement...</Text>
+          ) : filter.length == 0 ? (
+            <Text style={styles.emptyText}>Aucune matière disponible.</Text>
           ) : (
             filter.map((matiere, index) => (
-              <MatiereItem key={index} text={matiere.nom} iconSource={matiere.url_icone} onPress={() => {
-                router.push({
-                  pathname: '/categorie',
-                  params: { catId: matiere.id },
-                });
-              }} />
+              <MatiereItem
+                key={index}
+                text={matiere.nom}
+                iconSource={matiere.url_icone}
+                onPress={() => {
+                  router.push({
+                    pathname: '/categorie',
+                    params: { catId: matiere.id },
+                  });
+                }}
+              />
             ))
           )}
         </ScrollView>
@@ -120,35 +129,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginBottom: 20,
   },
-  matiere: {
-    width: "100%",
-    height: 96,
-    borderRadius: 20,
-    backgroundColor: "#F4F8FA",
-    marginBottom: 15,
-    display: "flex",
-    flexDirection: "row", 
-    alignItems: "center", 
-    justifyContent: "space-between", 
-    paddingHorizontal: 16, 
+  emptyText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#888',
+    marginTop: 20,
   },
-  leftSection: {
-    flexDirection: "row", 
-    alignItems: "center",
-  },
-  matiereText: {
-    marginLeft: 10, 
-    fontSize: 18,
-    fontWeight: "bold",
-    color: '#333',
-  },
-  icones: {
-    width: 54,
-    height: 54
-  }, 
-  arrow : {
-    width: 54,
-    height: 54,
-    transform: [{rotate: '180deg'}],
-  }
 });

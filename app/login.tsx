@@ -24,7 +24,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/connexion`, {
+      const response = await fetch(`https://sae501.mateovallee.fr/connexion`, {
         method: 'POST', 
         headers: {
             'Content-Type': 'application/json' 
