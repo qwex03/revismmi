@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, ScrollView, SafeAreaVi
 import { useRouter } from "expo-router";
 import ProfilePicture from "@/components/ui/ProfilePictures";
 import * as SecureStore from 'expo-secure-store';
+import UserBadges from "@/components/ui/UsersBadges";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -74,6 +75,7 @@ export default function SettingsPage() {
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
 
         <ProfilePicture />
+        <UserBadges/>
 
         <View>
           <Text style={styles.title}>Paramètres</Text>
@@ -149,5 +151,12 @@ const styles = StyleSheet.create({
   deleteText: {
     color: "black",
     fontWeight: "bold",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });

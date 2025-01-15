@@ -6,6 +6,7 @@ import CourseCard from '@/components/ui/CoursCard';
 import AchievementCard from '@/components/ui/AchievementCard';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
+import UserBadges from '@/components/ui/UsersBadges';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -121,6 +122,7 @@ const Dashboard = () => {
             </View>
           )}
         </View>
+
       </View>
     </SafeAreaView>
   );
