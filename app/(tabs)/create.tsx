@@ -15,14 +15,14 @@ export default function PageWithTitle() {
       if (result) {
         setFile(result.assets[0]);
         console.log('File picked: ', result.assets[0]);
-        uploadFile();
+        await uploadFile(result.assets[0]); // Pass the file to uploadFile
       }
     } catch (err) {
       console.error('Error picking document: ', err);
     }
   };
 
-  const uploadFile = async () => {
+  const uploadFile = async (file) => {
     if (!file) {
       console.log('No file selected');
       return;
@@ -36,7 +36,7 @@ export default function PageWithTitle() {
     });
 
     try {
-      const response = await fetch('http://10.62.148.134:3000/upload', {
+      const response = await fetch('http://192.168.65.35:3000/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
