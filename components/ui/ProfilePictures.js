@@ -9,6 +9,7 @@ const ProfilePicture = () => {
         return await SecureStore.getItemAsync('userToken');
       };
     const [pseudo, setPseudo] = useState('');
+    const [niveau, setNiveau] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,7 +17,9 @@ const ProfilePicture = () => {
             const userId = await getToken();
             const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}`);
             const json = await response.json();
-            setPseudo(json.pseudo)
+            console.log(json);
+            setPseudo(json.pseudo);
+            setNiveau(json.niveau)
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -35,6 +38,7 @@ const ProfilePicture = () => {
                 style={styles.profileImage}
                 />
             </View>
+            <Text style={styles.niveau}>Niveau {niveau}</Text>
         </View>
     );
 };
@@ -66,6 +70,12 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+      }, 
+      niveau: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 12,
+        textAlign: "center"
       }
 });
 

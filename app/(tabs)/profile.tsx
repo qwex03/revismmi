@@ -114,11 +114,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#CFE0EC",
-    padding: 20,
-    paddingBottom: 80,
+    padding: 12,
   },
   scrollContent: {
-    alignItems: "center",
+    paddingBottom: 200
   },
   button: {
     width: "100%",
