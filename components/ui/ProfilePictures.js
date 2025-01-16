@@ -10,6 +10,7 @@ const ProfilePicture = () => {
       };
     const [pseudo, setPseudo] = useState('');
     const [niveau, setNiveau] = useState('');
+    const [codeAmi, setCodeAmi] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,7 +20,8 @@ const ProfilePicture = () => {
             const json = await response.json();
             console.log(json);
             setPseudo(json.pseudo);
-            setNiveau(json.niveau)
+            setNiveau(json.niveau);
+            setCodeAmi(json.code_ami);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -38,6 +40,7 @@ const ProfilePicture = () => {
                 style={styles.profileImage}
                 />
             </View>
+            <Text style={styles.niveau}>#{codeAmi}</Text>
             <Text style={styles.niveau}>Niveau {niveau}</Text>
         </View>
     );
