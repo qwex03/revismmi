@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Middleware pour servir les fichiers statiques
-app.use('/uploads', express.static(path.join(__dirname, 'docs'))); // Changed from 'uploads' to 'docs'
+app.use('/uploads', express.static(path.join(__dirname, 'docs'))); 
 
 // Route pour uploader un fichier
 app.post('/upload', upload.single('file'), (req, res) => {
@@ -38,7 +38,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     file: {
       originalname: req.file.originalname,
       filename: req.file.filename,
-      path: `/uploads/${req.file.filename}` // Changed from 'uploads' to 'docs'
+      path: `/docs/${req.file.filename}` 
     }
   });
 
@@ -67,7 +67,7 @@ app.get('/files', (req, res) => {
     res.status(200).json({
       files: files.map(file => ({
         filename: file,
-        path: `/uploads/${file}` // Changed from 'uploads' to 'docs'
+        path: `/uploads/${file}` 
       }))
     });
   });
@@ -75,7 +75,7 @@ app.get('/files', (req, res) => {
 
 // Route pour télécharger un fichier spécifique
 app.get('/files/:filename', (req, res) => {
-  const filepath = path.join(__dirname, 'docs', req.params.filename); // Changed from 'uploads' to 'docs'
+  const filepath = path.join(__dirname, 'docs', req.params.filename); 
   res.download(filepath, err => {
     if (err) {
       res.status(404).json({ message: 'Fichier introuvable' });

@@ -72,7 +72,6 @@ function main () {
         .then(() => {
           console.log("outputFilePath: " + outputFilePath);
           extractResult(outputFilePath);
-          // return uploadToDB('docs/output.json');
         })
         .catch((error) => {
           console.error("Erreur lors de la création du cours :", error);
