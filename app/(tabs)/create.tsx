@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, Modal } from 'react-native';
 import BtnHelp from "@/components/ui/BtnHelp";
 import * as SecureStore from 'expo-secure-store';
+import { Picker } from '@react-native-picker/picker';
+import { BlurView } from 'expo-blur';
+import BtnSubmit from '@/components/ui/BtnSubmit';
 
 export default function PageWithTitle() {
   const [file, setFile] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [categorie, setCategorie] = useState('');
+  const [userCategories, setUserCategories] = useState([]);
+
 
   const getToken = async () => {
     return await SecureStore.getItemAsync('userToken');
@@ -20,14 +27,30 @@ export default function PageWithTitle() {
       if (result) {
         setFile(result.assets[0]);
         console.log('File picked: ', result.assets[0]);
-        await uploadFile(result.assets[0]); // Pass the file to uploadFile
+        setVisible(true);
       }
     } catch (err) {
       console.error('Error picking document: ', err);
     }
   };
 
-  const uploadFile = async (file) => {
+  const FetchAllCategories = async () => {
+    try {
+      const userId = await getToken();
+      const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/categories`);
+      const json = await response.json();
+      setUserCategories(json);
+      console.log(json);
+    } catch (err) {
+      console.error('Error picking document: ', err)
+    }
+  }
+
+  useEffect(() => {
+    FetchAllCategories();
+  }, [])
+
+  const uploadFile = async () => {
     if (!file) {
       console.log('No file selected');
       return;
@@ -41,7 +64,7 @@ export default function PageWithTitle() {
       type: file.mimeType,
     });
     formData.append('userId', userId);
-
+    formData.append('categorieId', categorie);
     try {
       const response = await fetch('http://10.181.33.134:3000/upload', {
         method: 'POST',
@@ -52,9 +75,9 @@ export default function PageWithTitle() {
       });
 
       const json = await response.json();
+      setVisible(false);
       console.log(json);
     } catch (error) {
-      console.log("test");
       console.error('Upload Error: ', error);
     }
   };
@@ -75,6 +98,32 @@ export default function PageWithTitle() {
           title={"Comment créer un cours ?"} 
           text={"Un cours est un espace pour apprendre, réviser, et se tester. Pour créer un cours, sélectionnez la manière dont vous voulez ajouter le contenu au cours (photo, importation d’un document). Ensuite, choisissez un dossier dans lequel sera enregistré votre cours. Ensuite, l’IA se chargera de transformer vos notes/cours en cours et en flashcards."} 
         />
+
+        <Modal
+        visible={visible}
+        animationType="fade"
+        onRequestClose={() => {
+          setVisible(!visible)
+        }}>
+          <BlurView intensity={50} style={styles.blurBackground}>
+            <View style={styles.modalContent}>
+              <Text>Choissisez la matière pour votre cours</Text>
+              <Picker
+              selectedValue={categorie}
+              onValueChange={(itemValue) => setCategorie(itemValue)}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+              >
+                {userCategories.map((cat) => (
+                  <Picker.Item key={cat.id} label={cat.nom} value={cat.id} />
+                ))}
+              </Picker>
+              <TouchableOpacity>
+                <BtnSubmit test={async () => await uploadFile()} />
+              </TouchableOpacity>
+            </View>
+          </BlurView>
+        </Modal>
 
       </View>
     </SafeAreaView>
@@ -133,5 +182,25 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: 'contain',
-  }
+  },
+  blurBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    width: '80%',
+  },
+  picker: {
+    width: 200,
+    height: 50,
+  },
+  pickerItem: {
+    height: 44,
+  },
 });

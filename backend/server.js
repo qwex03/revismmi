@@ -33,7 +33,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'Aucun fichier téléchargé' });
   }
-  const { userId } = req.body;
+  const { userId, categorieId } = req.body;
   res.status(200).json({
     message: 'Fichier téléchargé avec succès',
     file: {
@@ -42,6 +42,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
       path: `/uploads/${req.file.filename}` // Changed from 'uploads' to 'docs'
     },
     userId: userId,
+    categorieId: categorieId,
   });
 
   // Execute main.mjs after upload
