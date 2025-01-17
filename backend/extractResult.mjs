@@ -35,7 +35,7 @@ function convertJsonToMarkdown(json) {
     return markdown;
 }
 
-function extractResult(filePath) {
+function extractResult(filePath, userId) {
     console.log("extractResult filePath : "+filePath);
     const inputContent = fs.readFileSync(filePath, 'utf8');
     const { title, resume, quizz } = extractContent(inputContent);
@@ -46,7 +46,7 @@ function extractResult(filePath) {
     // Create the final JSON object
     const result = {
         nom : title,
-        id_createur: 2,
+        id_createur: userId,
         id_categorie: 1,
         resume: resumeJson,
         cartes: quizzJson

@@ -7,6 +7,9 @@ import uploadToDB from './upload_to_db.mjs';
 
 const directoryPath = "docs/";
 
+// Récupére userId depuis les arguments de la ligne de commande
+const userId = process.argv[2];
+
 // Vérifie si le fichier est un pdf, si non le convertit en pdf
 const checkAndConvertFiles = async (file) => {
   const ext = path.extname(file);
@@ -70,8 +73,7 @@ function main () {
         checkAndConvertFiles(filePath)
         .then((filePath) => create_course([filePath]))
         .then(() => {
-          console.log("outputFilePath: " + outputFilePath);
-          extractResult(outputFilePath);
+          extractResult(outputFilePath, userId);
         })
         .catch((error) => {
           console.error("Erreur lors de la création du cours :", error);
@@ -82,7 +84,7 @@ function main () {
         // Cas où l'input est une image
         courseFromImage(filePath, ext)
           .then(() => {
-            extractResult(outputFilePath);
+            extractResult(outputFilePath, userId);
             return uploadToDB('docs/output.json');
           })
           .catch(console.error);

@@ -43,7 +43,7 @@ export default function PageWithTitle() {
     formData.append('userId', userId);
 
     try {
-      const response = await fetch('http://10.181.33.134:3000/upload', {
+      const response = await fetch('http://192.168.65.35:3000/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -52,7 +52,7 @@ export default function PageWithTitle() {
       });
 
       const json = await response.json();
-      console.log(json);
+      console.log("try",json);
     } catch (error) {
       console.log("test");
       console.error('Upload Error: ', error);

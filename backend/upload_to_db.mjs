@@ -4,7 +4,7 @@ import path from 'path';
 
 const uploadToDB = async (filePath) => {
   const jsonData = fs.readFileSync(filePath, 'utf8');
-  const response = await fetch('https://lightgoldenrodyellow-chicken-532879.hostingersite.com/public/cours', {
+  const response = await fetch('https://sae501.mateovallee.fr/cours', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
