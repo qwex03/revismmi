@@ -6,6 +6,7 @@ import CourseCard from '@/components/ui/CoursCard';
 import AchievementCard from '@/components/ui/AchievementCard';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
+import UserBadges from '@/components/ui/UsersBadges';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -76,7 +77,7 @@ const Dashboard = () => {
 
         <Text style={styles.HelloText}>Bonjour {pseudo} 👋 !</Text>
         <View style={styles.list}>
-          <SectionTitle title="Vos Derniers Cours" onSeeAll={() => { router.push("/revise") }} />
+          <SectionTitle title="Vos Derniers Cours 📚" onSeeAll={() => { router.push("/revise") }} />
           {coursRecents && coursRecents.length > 0 ? (
             <FlatList
               data={coursRecents}
@@ -101,7 +102,7 @@ const Dashboard = () => {
             </View>
           )}
 
-          <SectionTitle title="Vos Badges Récents" onSeeAll={() => { router.push("/profile") }} />
+          <SectionTitle title="Vos Badges Récents 🏆" onSeeAll={() => { router.push("/profile") }} />
           {badgesRecents && badgesRecents.length > 0 ? (
             <FlatList
               data={badgesRecents}
@@ -121,6 +122,7 @@ const Dashboard = () => {
             </View>
           )}
         </View>
+
       </View>
     </SafeAreaView>
   );

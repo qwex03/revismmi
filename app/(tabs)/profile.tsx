@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, ScrollView, SafeAreaVi
 import { useRouter } from "expo-router";
 import ProfilePicture from "@/components/ui/ProfilePictures";
 import * as SecureStore from 'expo-secure-store';
+import UserBadges from "@/components/ui/UsersBadges";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -74,9 +75,10 @@ export default function SettingsPage() {
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
 
         <ProfilePicture />
+        <UserBadges/>
 
         <View>
-          <Text style={styles.title}>Paramètres</Text>
+          <Text style={styles.title}>Paramètres ⚙️</Text>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={() => { router.push('/settings-change') }}>
@@ -112,11 +114,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#CFE0EC",
-    padding: 20,
-    paddingBottom: 80,
+    padding: 12,
   },
   scrollContent: {
-    alignItems: "center",
+    paddingBottom: 200
   },
   button: {
     width: "100%",
@@ -149,5 +150,12 @@ const styles = StyleSheet.create({
   deleteText: {
     color: "black",
     fontWeight: "bold",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });

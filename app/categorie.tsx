@@ -5,6 +5,7 @@ import MatiereItem from "@/components/ui/MatBtn";
 import { useLocalSearchParams } from 'expo-router';
 import { useRouter } from "expo-router";
 import * as SecureStore from 'expo-secure-store';
+import BackArrow from '@/components/ui/BackArrow';
 
 export default function CategoriePage() {
   const { catId } = useLocalSearchParams();
@@ -62,7 +63,10 @@ export default function CategoriePage() {
           onChangeText={(text) => setSearch(text)}
         />
         <View style={styles.header}>
-          <Text style={styles.title}>Vos cours</Text>
+          <View style={styles.flex}>
+            <BackArrow route={"/revise"} />
+            <Text style={styles.title}>Vos cours</Text>
+          </View>
           <TouchableOpacity onPress={() => router.push('/create')} style={styles.button}>
             <Text style={styles.buttonText}>Nouveau Cours</Text>
           </TouchableOpacity>
@@ -140,6 +144,13 @@ const styles = StyleSheet.create({
     color: '#555',
     marginTop: 20,
   },
+  flex: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 0.5
+  }
 });
 
   

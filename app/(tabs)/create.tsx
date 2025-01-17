@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image } from 'react-native';
 import BtnHelp from "@/components/ui/BtnHelp";
+import * as SecureStore from 'expo-secure-store';
 
 export default function PageWithTitle() {
   const [file, setFile] = useState(null);
+
+  const getToken = async () => {
+    return await SecureStore.getItemAsync('userToken');
+  };
 
   const selectFile = async () => {
     try {
@@ -28,15 +33,17 @@ export default function PageWithTitle() {
       return;
     }
 
+    const userId = await getToken();
     const formData = new FormData();
     formData.append('file', {
       uri: file.uri,
       name: file.name,
       type: file.mimeType,
     });
+    formData.append('userId', userId);
 
     try {
-      const response = await fetch('http://192.168.65.35:3000/upload', {
+      const response = await fetch('http://10.181.33.134:3000/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -44,8 +51,10 @@ export default function PageWithTitle() {
         body: formData,
       });
 
-      console.log('File uploaded successfully');
+      const json = await response.json();
+      console.log(json);
     } catch (error) {
+      console.log("test");
       console.error('Upload Error: ', error);
     }
   };
