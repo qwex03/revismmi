@@ -31,11 +31,11 @@ function convertMarkdownToJson(markdown) {
 
 function convertJsonToMarkdown(json) {
     const obj = JSON.parse(json);
-    const markdown = obj.content; // Assuming the content is in Markdown format
+    const markdown = obj.content;
     return markdown;
 }
 
-function extractResult(filePath, userId) {
+function extractResult(filePath, userId, categorieId) {
     console.log("extractResult filePath : "+filePath);
     const inputContent = fs.readFileSync(filePath, 'utf8');
     const { title, resume, quizz } = extractContent(inputContent);
@@ -47,7 +47,7 @@ function extractResult(filePath, userId) {
     const result = {
         nom : title,
         id_createur: userId,
-        id_categorie: 1,
+        id_categorie: categorieId,
         resume: resumeJson,
         cartes: quizzJson
     };

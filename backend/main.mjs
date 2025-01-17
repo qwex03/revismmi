@@ -9,6 +9,7 @@ const directoryPath = "docs/";
 
 // Récupére userId depuis les arguments de la ligne de commande
 const userId = process.argv[2];
+const categorieId = process.argv[3];
 
 // Vérifie si le fichier est un pdf, si non le convertit en pdf
 const checkAndConvertFiles = async (file) => {
@@ -73,7 +74,7 @@ function main () {
         checkAndConvertFiles(filePath)
         .then((filePath) => create_course([filePath]))
         .then(() => {
-          extractResult(outputFilePath, userId);
+          extractResult(outputFilePath, userId, categorieId);
         })
         .catch((error) => {
           console.error("Erreur lors de la création du cours :", error);
@@ -84,8 +85,7 @@ function main () {
         // Cas où l'input est une image
         courseFromImage(filePath, ext)
           .then(() => {
-            extractResult(outputFilePath, userId);
-            return uploadToDB('docs/output.json');
+            extractResult(outputFilePath, userId, categorieId);
           })
           .catch(console.error);
       }

@@ -46,7 +46,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   });
 
   // Execute main.mjs after upload with userId
-  exec(`node main.mjs ${userId}`, (error, stdout, stderr) => {
+  exec(`node main.mjs ${userId} ${categorieId}`, (error, stdout, stderr) => {
     if (error) {
       console.error(`Erreur lors de l'exécution de main.mjs: ${error.message}`);
       return;

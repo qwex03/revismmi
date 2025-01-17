@@ -102,39 +102,56 @@ prompt = """
       {
         "question": "example de recto de flashcard",
         "reponses": [
-        { "reponse": "exemple de verso de flashcard" }
+          { "reponse": "exemple de verso de flashcard", "correcte": true }
         ],
         "type": "flashcard"
-    }
+      },
+      {
+        "question": "example de recto de flashcard",
+        "reponses": [
+          { "reponse": "exemple de verso de flashcard", "correcte": true }
+        ],
+        "type": "flashcard"
+      }
     \`\`\`
     """
 
-response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {
-            "role": "user",
-            "content": [
+def call_api_with_retry(base64_image, output_file, retry_count=3):
+    for attempt in range(retry_count):
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
                 {
-                    "type": "text",
-                    "text": prompt,
-                },
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": f"data:image/jpeg;base64,{base64_image}"
-                    },
-                },
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": prompt,
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                            },
+                        },
+                    ],
+                }
             ],
-        }
-    ],
-)
+        )
 
-# Extraction du contenu du message
-content = response.choices[0].message.content
+        # Extraction du contenu du message
+        content = response.choices[0].message.content
 
-# Sauvegarde du contenu dans un fichier Markdown
-with open(args.output_file, "w", encoding="utf-8") as md_file:
-     md_file.write(content)
+        if "Erreur lecture" in content:
+            print("Erreur lecture du document, nouvel essai...")
+            continue
+        else:
+            # Sauvegarde du contenu dans un fichier Markdown
+            with open(output_file, "w", encoding="utf-8") as md_file:
+                md_file.write(content)
+            print(f"The content has been saved to {output_file}")
+            return
 
-print(f"The content has been saved to {args.output_file}")
+    raise Exception("Erreur lecture du document après plusieurs tentatives")
+
+call_api_with_retry(base64_image, args.output_file)
