@@ -22,7 +22,7 @@ export default function SettingsPage() {
   const handleSubmit = async () => {
     try {
       const userId = await getToken();
-      const response = await fetch(`https://sae501.mateovallee.fr/public/categories`, {
+      const response = await fetch(`https://sae501.mateovallee.fr/categories`, {
         method: 'POST', 
         body: JSON.stringify({
             nom: formdata.nom,

@@ -8,8 +8,13 @@ const Quiz = ({ data }) => {
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [showFlashcardAnswer, setShowFlashcardAnswer] = useState(false);
-  const [attemptsLeft, setAttemptsLeft] = useState(0);
-
+  const [attemptsLeft, setAttemptsLeft] = useState(
+    data.cartes[0].type === "qcm" && data.cartes[0].reponses.length >= 4 ? 2 : 1
+  );
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [incorrectAnswers, setIncorrectAnswers] = useState([]);
+  
   const getToken = async () => {
     return await SecureStore.getItemAsync('userToken');
   };
@@ -17,21 +22,20 @@ const Quiz = ({ data }) => {
   const UpdateMaitrise = async (IdCarte, Result) => {
     try {
       const userId = await getToken();
-      const response = await fetch('https://sae501.mateovallee.fr/maitrise',
-        {
-          method: 'POST',
-          body: JSON.stringify({
+      const response = await fetch('https://sae501.mateovallee.fr/maitrise', {
+        method: 'POST',
+        body: JSON.stringify({
           id_user: userId,
           id_carte: IdCarte,
-          reussie: Result
-          }),
-        },
-      )
+          reussie: Result,
+        }),
+      });
       const json = await response.json();
-    } catch(error) {
-      console.error('Erreur update maitrise : ', error)
+      console.log(json);
+    } catch (error) {
+      console.error('Erreur update maitrise : ', error);
     }
-  }
+  };
 
   const currentCard = data.cartes[currentCardIndex];
 
@@ -45,24 +49,37 @@ const Quiz = ({ data }) => {
 
   const validateAnswers = async () => {
     if (currentCard.type === "qcm") {
-      const correctAnswers = currentCard.reponses
+      const correctAnswersIndexes = currentCard.reponses
         .map((item, index) => (item.correcte ? index : null))
         .filter((index) => index !== null);
 
       const isCorrect =
-        correctAnswers.length === selectedAnswers.length &&
-        correctAnswers.every((index) => selectedAnswers.includes(index));
+        correctAnswersIndexes.length === selectedAnswers.length &&
+        correctAnswersIndexes.every((index) => selectedAnswers.includes(index));
 
       if (isCorrect) {
         await UpdateMaitrise(currentCard.id, true);
         setScore(score + 1);
-        goToNextCard();
-      } else if (attemptsLeft > 1) {
-        setAttemptsLeft(attemptsLeft - 1);
-        setSelectedAnswers([]);
+        setCorrectAnswers((prev) => [
+          ...prev,
+          { question: currentCard.question, answers: currentCard.reponses.filter((r) => r.correcte) },
+        ]);
+        setErrorMessage(null);
+        goToNextCard(); 
       } else {
-        await UpdateMaitrise(currentCard.id, false);
-        goToNextCard();
+        if (attemptsLeft > 1) {
+          setAttemptsLeft(attemptsLeft - 1);
+          setSelectedAnswers([]);
+          setErrorMessage("Réponse incorrecte. Essayez à nouveau.");
+        } else {
+          await UpdateMaitrise(currentCard.id, false);
+          setIncorrectAnswers((prev) => [
+            ...prev,
+            { question: currentCard.question, answers: currentCard.reponses.filter((r) => !r.correcte) },
+          ]);
+          setErrorMessage("Pas de tentatives restantes. Vous avez échoué cette question.");
+          goToNextCard(); 
+        }
       }
     }
   };
@@ -72,7 +89,9 @@ const Quiz = ({ data }) => {
       setCurrentCardIndex(currentCardIndex + 1);
       setSelectedAnswers([]);
       setShowFlashcardAnswer(false);
-      setAttemptsLeft(currentCard.type === "qcm" && currentCard.reponses.length >= 4 ? 2 : 1);
+      setErrorMessage(null);
+      const nextCard = data.cartes[currentCardIndex + 1];
+      setAttemptsLeft(nextCard.type === "qcm" && nextCard.reponses.length >= 4 ? 2 : 1); 
     } else {
       setShowScore(true);
     }
@@ -84,7 +103,12 @@ const Quiz = ({ data }) => {
     setShowScore(false);
     setSelectedAnswers([]);
     setShowFlashcardAnswer(false);
-    setAttemptsLeft(0);
+    setErrorMessage(null);
+    setCorrectAnswers([]);
+    setIncorrectAnswers([]); 
+    setAttemptsLeft(
+      data.cartes[0].type === "qcm" && data.cartes[0].reponses.length >= 4 ? 2 : 1
+    );
   };
 
   return (
@@ -94,6 +118,36 @@ const Quiz = ({ data }) => {
           <Text style={styles.scoreText}>
             Quiz terminé ! Vous avez obtenu {score} / {data.cartes.filter((c) => c.type === "qcm").length}.
           </Text>
+          <Text style={styles.correctAnswersText}>Réponses Correctes :</Text>
+          <FlatList
+            data={correctAnswers}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.correctAnswerContainer}>
+                <Text style={[styles.correctQuestion, { color: 'green' }]}>{item.question}</Text>
+                {item.answers.map((answer, idx) => (
+                  <Text key={idx} style={styles.correctAnswerText}>
+                    - {answer.reponse}
+                  </Text>
+                ))}
+              </View>
+            )}
+          />
+          <Text style={styles.correctAnswersText}>Réponses Incorrectes :</Text>
+          <FlatList
+            data={incorrectAnswers}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.correctAnswerContainer}>
+                <Text style={[styles.correctQuestion, { color: 'red' }]}>{item.question}</Text>
+                {item.answers.map((answer, idx) => (
+                  <Text key={idx} style={styles.correctAnswerText}>
+                    - {answer.reponse}
+                  </Text>
+                ))}
+              </View>
+            )}
+          />
           <TouchableOpacity style={styles.button} onPress={resetQuiz}>
             <Text style={styles.buttonText}>Recommencer</Text>
           </TouchableOpacity>
@@ -103,13 +157,15 @@ const Quiz = ({ data }) => {
           <View style={styles.cardContainer}>
             <Text style={styles.questionText}>
               {currentCard.question}
-              {currentCard.type === "qcm" && currentCard.reponses.filter((r) => r.correcte).length > 1 ? " (choix multiples)" : ""}
+              {currentCard.type === "qcm" && currentCard.reponses.filter((r) => r.correcte).length > 1
+                ? " (choix multiples)"
+                : ""}
             </Text>
 
             {currentCard.type === "flashcard" ? (
               <View>
                 {showFlashcardAnswer ? (
-                  <Text style={styles.flashcardAnswer}>{currentCard.reponses.reponse}</Text>
+                  <Text style={styles.flashcardAnswer}>{Array.isArray(currentCard.reponses) ? currentCard.reponses[0].reponse : currentCard.reponses.reponse}</Text>
                 ) : (
                   <Text style={styles.flashcardAnswer}>Cliquez pour révéler la réponse</Text>
                 )}
@@ -151,6 +207,8 @@ const Quiz = ({ data }) => {
                 <Text style={styles.buttonText}>Valider</Text>
               </TouchableOpacity>
             )}
+
+            {errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
           </View>
         )
       )}
@@ -179,9 +237,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 16 },
-  flashcardAnswer: { fontSize: 16, marginVertical: 16 },
+  flashcardAnswer: { fontSize: 16, marginVertical: 16, color: "black" },
   scoreContainer: { alignItems: "center", justifyContent: "center", flex: 1 },
   scoreText: { fontSize: 24, fontWeight: "bold" },
+  errorMessage: { color: "red", fontSize: 14, marginTop: 8 },
+  correctAnswersText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+  },
+  correctAnswerContainer: {
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+  },
+  correctQuestion: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  correctAnswerText: {
+    fontSize: 16,
+    color: "#4CAF50",
+  },
 });
 
 export default Quiz;
