@@ -1,4 +1,3 @@
-```
 # Guide d'installation du projet
 
 Ce guide décrit les étapes nécessaires pour installer et démarrer le projet sur votre machine.
