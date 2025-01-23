@@ -98,18 +98,7 @@ export default function SettingsPage() {
             <View style={styles.ResumeContainer}>
               <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Markdown>
-                  {`
-                  # Exemple de Markdown avec LaTeX
-
-                  Voici une formule inline : $E = mc^2$.
-
-                  Et une formule en bloc :
-
-                  $$
-                  f(x) = \\int_{-\\infty}^\\infty
-                  \\hat{f}(\\xi) e^{2 \\pi i \\xi x} \\,d\\xi
-                  $$
-                `}
+                  {cour.resume}
                 </Markdown>
               </ScrollView>
             </View>
