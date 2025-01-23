@@ -1,50 +1,36 @@
-# Welcome to your Expo app 👋
+# Guide Installation du projet
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
+1. Cloner le dépot git
 
    ```bash
-   npm install
+   git clone https://github.com/qwex03/revismmi.git
    ```
 
-2. Start the app
+2. Installer les modules npm
 
    ```bash
-    npx expo start
+    npm i
    ```
 
-In the output, you'll find options to open the app in a
+3. Changer l'ip dans create
+   '''bash
+   changer l'ip dans le file create qui se trouve  app/(tabs)/create.tsx
+   dans la méthode uploadfile par l'adresse ipv4 de votre machine
+   '''
+4. Installer les modules pythons nécessaires
+   '''bash
+   docx2pdf, pptxtopdf, odt_pdf.odt_to_pdf, openai
+   '''
+5. Lancer le serv Backend
+   Se déplacer dans le dossier backend faire :
+   '''bash
+   node server.js
+   '''
+6. Lancer le front-end
+   '''bash
+   npm start
+   '''
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+7. Installer expo go sur mobile
+   scanner le qr code attendre le build de l'app un compte existe dans l'app email a, password a
+   
