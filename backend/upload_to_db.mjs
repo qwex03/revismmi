@@ -21,18 +21,18 @@ const uploadToDB = async (filePath) => {
   console.log(result);
 
   //Supprimer les fichiers après l'upload
-  // if (result !== null) {
-  //   const docsDir = "docs/";
-  //   fs.readdir(docsDir, (err, files) => {
-  //     if (err) throw err;
+  if (result !== null) {
+    const docsDir = "docs/";
+    fs.readdir(docsDir, (err, files) => {
+      if (err) throw err;
 
-  //     for (const file of files) {
-  //       fs.unlink(path.join(docsDir, file), err => {
-  //         if (err) throw err;
-  //       });
-  //     }
-  //   });
-  // }
+      for (const file of files) {
+        fs.unlink(path.join(docsDir, file), err => {
+          if (err) throw err;
+        });
+      }
+    });
+  }
 };
 
 export default uploadToDB;
