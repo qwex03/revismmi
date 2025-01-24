@@ -42,6 +42,7 @@ function extractResult(filePath, userId, categorieId) {
     const resumeJson = JSON.stringify(resume);
 
     const quizzJson = JSON.parse(`[${quizz}]`);
+    console.log(categorieId);
 
     // Create the final JSON object
     const result = {
