@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, Modal, ActivityIndicator } from 'react-native';
 import BtnHelp from "@/components/ui/BtnHelp";
 import * as SecureStore from 'expo-secure-store';
 import { Picker } from '@react-native-picker/picker';
@@ -12,7 +12,7 @@ export default function PageWithTitle() {
   const [visible, setVisible] = useState(false);
   const [categorie, setCategorie] = useState('');
   const [userCategories, setUserCategories] = useState([]);
-
+  const [loading, setLoading] = useState(false);
 
   const getToken = async () => {
     return await SecureStore.getItemAsync('userToken');
@@ -26,7 +26,6 @@ export default function PageWithTitle() {
       });
       if (result) {
         setFile(result.assets[0]);
-        console.log('File picked: ', result.assets[0]);
         setVisible(true);
       }
     } catch (err) {
@@ -40,22 +39,21 @@ export default function PageWithTitle() {
       const response = await fetch(`https://sae501.mateovallee.fr/users/${userId}/categories`);
       const json = await response.json();
       setUserCategories(json);
-      console.log(json);
     } catch (err) {
-      console.error('Error picking document: ', err)
+      console.error('Error picking document: ', err);
     }
-  }
+  };
 
   useEffect(() => {
     FetchAllCategories();
-  }, [])
+  }, []);
 
   const uploadFile = async () => {
     if (!file) {
-      console.log('No file selected');
       return;
     }
 
+    setLoading(true);
     const userId = await getToken();
     const formData = new FormData();
     formData.append('file', {
@@ -65,8 +63,9 @@ export default function PageWithTitle() {
     });
     formData.append('userId', userId);
     formData.append('categorieId', categorie);
+
     try {
-      const response = await fetch('http://192.168.65.35:3000/upload', {
+      const response = await fetch('http://10.181.33.134:3000/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -76,9 +75,10 @@ export default function PageWithTitle() {
 
       const json = await response.json();
       setVisible(false);
-      console.log(json);
     } catch (error) {
       console.error('Upload Error: ', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,31 +100,36 @@ export default function PageWithTitle() {
         />
 
         <Modal
-        visible={visible}
-        animationType="fade"
-        onRequestClose={() => {
-          setVisible(!visible)
-        }}>
+          visible={visible}
+          animationType="fade"
+          onRequestClose={() => {
+            setVisible(!visible);
+          }}>
           <BlurView intensity={50} style={styles.blurBackground}>
             <View style={styles.modalContent}>
-              <Text>Choissisez la matière pour votre cours</Text>
-              <Picker
-              selectedValue={categorie}
-              onValueChange={(itemValue) => setCategorie(itemValue)}
-              style={styles.picker}
-              itemStyle={styles.pickerItem}
-              >
-                {userCategories.map((cat) => (
-                  <Picker.Item key={cat.id} label={cat.nom} value={cat.id} />
-                ))}
-              </Picker>
-              <TouchableOpacity>
-                <BtnSubmit test={async () => await uploadFile()} />
-              </TouchableOpacity>
+              {loading ? (
+                <ActivityIndicator size="large" color="#6200ee" />
+              ) : (
+                <>
+                  <Text>Choisissez la matière pour votre cours</Text>
+                  <Picker
+                    selectedValue={categorie}
+                    onValueChange={(itemValue) => setCategorie(itemValue)}
+                    style={styles.picker}
+                    itemStyle={styles.pickerItem}
+                  >
+                    {userCategories.map((cat) => (
+                      <Picker.Item key={cat.id} label={cat.nom} value={cat.id} />
+                    ))}
+                  </Picker>
+                  <TouchableOpacity>
+                    <BtnSubmit test={async () => await uploadFile()} />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </BlurView>
         </Modal>
-
       </View>
     </SafeAreaView>
   );
@@ -204,3 +209,4 @@ const styles = StyleSheet.create({
     height: 44,
   },
 });
+

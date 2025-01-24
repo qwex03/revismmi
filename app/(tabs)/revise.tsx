@@ -64,11 +64,10 @@ export default function PageWithTitle() {
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.matieres} contentContainerStyle={{ paddingBottom: 85 }}>
-          {loading ? (
-            <Text>Chargement...</Text>
-          ) : filter.length == 0 ? (
-            <Text style={styles.emptyText}>Aucune matière disponible.</Text>
-          ) : (
+        {loading ? (
+          <Text>Chargement...</Text>
+        ) : (
+          Array.isArray(filter) ? (
             filter.map((matiere, index) => (
               <MatiereItem
                 key={index}
@@ -82,7 +81,10 @@ export default function PageWithTitle() {
                 }}
               />
             ))
-          )}
+          ) : (
+            <Text style={styles.emptyText}>Aucune matière disponible.</Text>
+          )
+        )}
         </ScrollView>
       </View>
     </SafeAreaView>

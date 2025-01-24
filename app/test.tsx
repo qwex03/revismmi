@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import RenderHTML from "react-native-render-html";
-import MarkdownIt from "markdown-it";
-import markdownItKatex from "markdown-it-katex";
 import BackArrow from "@/components/ui/BackArrow";
 import Quiz from "@/components/ui/Quiz";
 import { useLocalSearchParams } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import Markdown from 'react-native-markdown-display';
+
 
 
 export default function SettingsPage() {
@@ -44,6 +44,7 @@ export default function SettingsPage() {
         const json = await response.json();
         setCour(json);
         setLoading(false);
+        console.log(cour.resume)
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
@@ -54,15 +55,6 @@ export default function SettingsPage() {
   }, []);
 
   
-  
-
-
-  const mdParser = new MarkdownIt().use(markdownItKatex);
-  const markdown = `
-  # Cours de Mathématiques - Introduction à l'Algèbre
-  ...
-  `;
-
   if (loading) {
     return (
       <SafeAreaView style={styles.safeContainer}>
@@ -73,7 +65,6 @@ export default function SettingsPage() {
     );
   }
 
-  const htmlContent = cour && cour.resume ? mdParser.render(cour.resume) : mdParser.render("il n'y aucun cours");
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -106,7 +97,9 @@ export default function SettingsPage() {
           {activeTab === "Résumé" && (
             <View style={styles.ResumeContainer}>
               <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <RenderHTML source={{ html: htmlContent }} />
+                <Markdown>
+                  {cour.resume}
+                </Markdown>
               </ScrollView>
             </View>
           )}

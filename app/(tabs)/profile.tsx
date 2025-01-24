@@ -11,6 +11,17 @@ export default function SettingsPage() {
   const DeleteToken = async () => {
     return await SecureStore.deleteItemAsync('token');
   };
+
+  const deleteToken = async () => {
+    try {
+      await SecureStore.deleteItemAsync('userToken');
+      console.log("Token supprimé avec succès.");
+      router.replace('/login'); 
+    } catch (error) {
+      console.error("Erreur lors de la suppression du token :", error);
+      Alert.alert("Erreur", "Une erreur s'est produite lors de la déconnexion.");
+    }
+  };
   
   const getToken = async () => {
     return await SecureStore.getItemAsync('userToken');
@@ -26,7 +37,7 @@ export default function SettingsPage() {
       const json = await response.json();
       if (json.message) {
         await DeleteToken();
-        console.log("success");
+        router.replace('/register');
       } else {
         console.log(json);
         console.log("erreur lors de la suppression du commpte")
@@ -45,10 +56,7 @@ export default function SettingsPage() {
         }, {
           text: "Ok",
           style: "destructive",
-          onPress: async () => {
-            await DeleteToken();
-            router.push('/login');
-          }
+          onPress: deleteToken,
         }
       ]
     );

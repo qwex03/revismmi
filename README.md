@@ -1,50 +1,59 @@
-# Welcome to your Expo app 👋
+# Guide d'installation du projet
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Ce guide décrit les étapes nécessaires pour installer et démarrer le projet sur votre machine.
 
-## Get started
+## 1. Cloner le dépôt Git
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Clonez le dépôt en utilisant la commande suivante :
 
 ```bash
-npm run reset-project
+git clone https://github.com/qwex03/revismmi.git
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 2. Installer les modules npm
 
-## Learn more
+Naviguez dans le répertoire du projet et installez les dépendances npm :
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm install
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 3. Modifier l'IP dans le fichier `create.tsx`
 
-## Join the community
+Dans le fichier `app/(tabs)/create.tsx`, modifiez l'adresse IP dans la méthode `uploadFile` et remplacez-la par l'adresse IPv4 de votre machine.
 
-Join our community of developers creating universal apps.
+## 4. Installer les modules Python nécessaires
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Installez les modules Python suivants :
+
+```bash
+pip install docx2pdf pptxtopdf odt_pdf openai
+```
+
+## 5. Lancer le serveur Backend
+
+Dans le répertoire `backend`, démarrez le serveur avec la commande suivante :
+
+```bash
+node server.js
+```
+
+## 6. Lancer le Front-end
+
+Retournez dans le répertoire principal du projet et lancez l'application front-end avec la commande suivante :
+
+```bash
+npm start
+```
+
+## 7. Installer Expo Go sur votre appareil mobile
+
+- Téléchargez l'application **Expo Go**.
+- Scannez le QR code affiché dans votre terminal ou votre navigateur.
+- Attendez que le build de l'application soit terminé.
+- Connectez-vous avec les identifiants suivants ou créer un compte :
+  - **Email :** `a`
+  - **Mot de passe :** `a`
+
+---
+
