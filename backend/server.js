@@ -12,14 +12,14 @@ app.use(cors());
 // Configuration de multer pour le stockage des fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = './docs'; // Changed from './uploads' to './docs'
+    const uploadDir = './docs'; 
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir);
     }
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Ajoute un timestamp pour éviter les conflits de noms
+    cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
@@ -62,7 +62,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 // Route pour récupérer la liste des fichiers
 app.get('/files', (req, res) => {
-  const uploadDir = './docs'; // Changed from './uploads' to './docs'
+  const uploadDir = './docs'; 
   fs.readdir(uploadDir, (err, files) => {
     if (err) {
       return res.status(500).json({ message: 'Erreur lors de la lecture des fichiers' });
