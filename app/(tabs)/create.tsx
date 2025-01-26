@@ -65,7 +65,8 @@ export default function PageWithTitle() {
     formData.append('categorieId', categorie);
 
     try {
-      const response = await fetch('http://10.181.33.134:3000/upload', {
+      // REMPLACEZ L'IPV4 DANS L'URL PAR l'IPV4 DE VOTRE MACHINE //
+      const response = await fetch('http://192.168.131.35:3000/upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',

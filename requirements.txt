@@ -1,0 +1,5 @@
+openai==1.57.4
+argparse==1.4.0
+docx2pdf== 0.1.8
+pptxtopdf==0.0.2
+odt-pdf==0.1.1

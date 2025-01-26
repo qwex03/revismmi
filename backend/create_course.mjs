@@ -3,7 +3,8 @@ import fs from "fs";
 import path from "path";
 
 const openai = new OpenAI({
-  apiKey: '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',
+  // Remplacez par la clé API OpenAI fournie par mail //
+  apiKey: 'remplacez_par_la_cle_api',
 });
 
 //Paramètres
